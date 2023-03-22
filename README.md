@@ -1,16 +1,14 @@
 # git-repository for snow-research
 # 
 :snowman: The snow research is a cooperation with
-
-Sven Kotlarski (Meteo Swiss)and Christian Steger (ETH), Claas Teichmann, Katharina Bülow
+Christain Steger (ETH) and Sven Kotlarski (Meteo Swiss), Claas Teichmann, Katharina Bülow, Ludwig Lierhammer
     
 This git repository holds the GERICS contribution
 
 
-## 1.) Indice calculation - old scripts from mistral
-    
-program is in the directory INDICES
- - python/3 is required
+## 1.) Indice calculation have been calculated on mistral
+
+ - cdo has been used    
  - Calculats indices for snw and snowdays: Annual, seasonal, NDJFMA, monthly Means
  - Snow day is greater than : snw =  9.36 [kg/m²] ; snd 0.03 [m] (snw = 0.03 m *0.312 kg/m3)
 
@@ -22,7 +20,7 @@ have snw for the RCM you can use snd and coverted it to snw by mulipying it with
 * You need some fixed field:
     * areacella
     * land see mask (common lsm (at least 50% land cover in all modells)
-    * orographie to calculate: mask per height level (../sh-scripts/make_height_level_mask.sh)
+    * orographie 
     * mask of accumulated snow 
 
 ### Results for Prudence Regions:
@@ -33,21 +31,14 @@ have snw for the RCM you can use snd and coverted it to snw by mulipying it with
 
 This is the reason why you do not find the same number of simulations at each region and hight level.
 
-* For Prudence Regions
 * Timeslice 1971-2000, 2021-2050, 2070-2099
      
-* Snow water equivalent [mm]:
-    - areamean for Prudence Region and on different height levels for timeslices
+* Snow water equivalent [mm], snow covered area [%] (part of full prudence region) and number of snowdays:
+    - areamean for prudence region and on different height levels for timeslices
     - timeseries per year averaged over Prudence-Region and height level
     - timeseries of 30 year running mean of annual change compared to 1971-2000  averaged over Prudence-Region and height level
-    - Annual cycle averaged of time slice and Prudence region and height level.
+    - Annual cycle averaged of time slice and prudence region and height level.
 
- * Snowcovered area [%] calculated from snowdays:
-    - Prudence Region and height-level:
-        - Annual cycle 
-        - timeslice
-        - timeseries
-	
  * New Index af30, area of annual snowcover with atleast 30 snowdays/year.
 
  * The year is always from September to August
@@ -63,7 +54,7 @@ preview of plots:
 
     https://drive.google.com/drive/folders/1xDmv63OY1dKlB8qv-CmSXQOllZQ6C4lh
 
-a.) ANNUAL CYCLE for number of snowdays and snow covered area [sca]
+a.) ANNUAL CYCLE (eg. Sept.71 till August.01) for number of snowdays and snow covered area [sca]
     What means % of sca:
     The monthly values are all adjusted to month with the length of 30 days.
   * for each scenario, plotting all hight levels and 4 prudence regions
@@ -75,45 +66,28 @@ a.) ANNUAL CYCLE for number of snowdays and snow covered area [sca]
 	
 b.) HORIZONTAL
 
+    * Absolute values of snow cover and change incl robustness
+
+    * Timeslice 1971-2000, 2021-2050, 2070-2099
+
     * here you find a nootbook and in the notebook the link to download the data
 
 
-c.) SCATTER
+c.) SCATTER (Nov-April)
 
+    Before starting the scripts, you need to adjust the input and output
+    directory and select which variable you like to plot 
 
-:warning:  Scripts are still under construction
+	* make_scatter_plots_6x4_sca_absolut_values.py (Scatterplots of absolut values)
+	* make_scatter_plots_change_6x4.py (Scatterplots of change)
+	
+	:rainbow: Colors and markers are stored here:
+	* scattertable.py
 
-We try to use the colors from https://www.fabiocrameri.ch/colourmaps/
+	This ist just a funktion to clean up :scissors: the data frame:
+	* design_matrix_tool.py
 
-   pip install cmcrameri
-
-   test_crameri.py
-
-Crameri, F. (2018). Scientific colour-maps. Zenodo. http://doi.org/10.5281/zenodo.1243862
-
-Crameri, F. (2018), Geodynamic diagnostics, scientific visualisation and StagLab 3.0, Geosci. Model Dev., 11, 2541-2562, doi:10.5194/gmd-11-2541-2018.
-
-This script merges a lot of netcdf files into one dataframe:
-
-	plotting-routines/create_one_df_of_all_netcdf_files.py
-
-Result for November-April, area mean of tas, pr, snw, snowday, sca historical, scenario and change:
-
-	plotting-routines/data/
-
-### Different plot scripts:
-
-I used
-:information_desk_person: https://www.youtube.com/c/KimberlyFessel/videos
-to learn a lot about plotting.
-
-:snowflake: Scripts are stored in : plotting-routines/plotting-py
-
-* Annual cycle
-
-* Horizontal plots (November - April) (not jet added)
-
-* Stripplot+Barplots
+d.) Stripplot+Barplots
 	plotting-routines/plotting-py:
 	* snow_cover_change_hl_box+stripplot_compare_exp.py
 	(make plots of sca on each hight level for each region and timeslice.
@@ -124,28 +98,39 @@ to learn a lot about plotting.
 	* snow_plotting_tools.py
 	(this are just tools)
 	
-* timeseries for annual mean 30-year running mean change:
+e.) timeseries for annual mean 30-year running mean change:
   	* plot_timeseries_all_rcps_region.py (full region)
 	* plot_timeseries_all_rcps_region_levels.py (each level)
 
 	(The bandwidth is 'pi'=95)
 
-* timeseries for annual mean AF30 (area of at least 30-days of snow cover area ):
+f.) timeseries for annual mean AF30 (area of at least 30-days of snow cover area ):
   	* plot_timeseries_AF30_all_rcps_region.py
+	* Absolute Values
 
 	Unit: % of covered area for each region SC, EA, AL, IP, EU
 
 	(The bandwidth is 'pi'=50, Inter quartile range)
 	     
-* Scatterplots
 
-  Before starting the scripts, you need to adjust the input and output directory and select which variable you like to plot 
 
-	* make_scatter_plots_6x4_sca_absolut_values.py (Scatterplots of absolut values)
-	* make_scatter_plots_change_6x4.py (Scatterplots of change)
-	
-	:rainbow: Colors and markers are stored here:
-	* scattertable.py
 
-	This ist just a funktion to clean up :scissors: the data frame:
-	* design_matrix_tool.py
+
+
+
+## :snowflake: Ideas and hints and links:
+
+We try to use the colors from https://www.fabiocrameri.ch/colourmaps/
+
+       pip install cmcrameri
+
+       test_crameri.py
+
+Crameri, F. (2018). Scientific colour-maps. Zenodo. http://doi.org/10.5281/zenodo.1243862
+
+Crameri, F. (2018), Geodynamic diagnostics, scientific visualisation and StagLab 3.0, Geosci. Model Dev., 11, 2541-2562, doi:10.5194/gmd-11-2541-2018.
+
+
+I used :information_desk_person: https://www.youtube.com/c/KimberlyFessel/videos
+to learn a lot about plotting.
+
