@@ -87,7 +87,8 @@ c.) SCATTER (Nov-April)
 	This ist just a funktion to clean up :scissors: the data frame:
 	* design_matrix_tool.py
 
-d.) Stripplot+Barplots
+d.) BOXPLOTS: (funktioniert nicht mehr)
+	* uses the same input-data-file as SCATTER
 	plotting-routines/plotting-py:
 	* snow_cover_change_hl_box+stripplot_compare_exp.py
 	(make plots of sca on each hight level for each region and timeslice.
