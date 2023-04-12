@@ -69,7 +69,7 @@ def create_plot(df,var):
                   err_style="band", 
                   errorbar=('pi',95),
                   estimator='mean',
-                  hue='timeslice_rcp',
+                  hue='rcp_timeslice',
                   hue_order=['rcp26_1971-2000','rcp26_2021-2050','rcp26_2069-2098',
                              'rcp45_1971-2000','rcp45_2021-2050','rcp45_2069-2098',
                              'rcp85_1971-2000','rcp85_2021-2050','rcp85_2069-2098'],
@@ -87,8 +87,9 @@ def create_plot(df,var):
                         
         #g.set(ylim=(ymin, ymax))
 
-    sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))
-          
+    #sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))
+    sns.move_legend(g,'lower center', scatterpoints = 1, bbox_to_anchor=(0.45, -0.1),fancybox=True, shadow=True, ncol=3 )
+
     plotname= plotdir+'all_regions_'+var+'_annualcycle_all_rcps.png'
     plt.savefig(plotname, bbox_inches="tight")
 
@@ -100,8 +101,8 @@ def create_plot(df,var):
 #
 # Select what you like to plot here:
 #
-var_meta_dict = {'snw':[' Snowcover ', 'sca', '%', (0,100)],}
-#var_meta_dict = {'snw':[' Snowday ', 'snowday', 'number', (0,16)],}
+#var_meta_dict = {'snw':[' Snowcover ', 'sca', '%', (0,100)],}
+var_meta_dict = {'snw':[' snow day ', 'snowday', 'number', (0,16)],}
 
 
 print(os.getcwd())
@@ -167,7 +168,7 @@ print('sel3: ',sel3.shape)
 df_neu = pd.concat([sel1,sel2,sel3],ignore_index=True, sort=False)
 
 # only added to define the color in the plots
-df_neu['timeslice_rcp']=df_neu['exp']+'_'+df_neu['timeslice']
+df_neu['rcp_timeslice']=df_neu['exp']+'_'+df_neu['timeslice']
 
 # plotting:
 

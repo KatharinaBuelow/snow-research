@@ -72,7 +72,7 @@ def create_plot(df,var,rcp):
 # Select what you like to plot here:
 #
 #var_meta_dict = {'snw':[' Snowcover ', 'sca', '%', (0,100)],}
-var_meta_dict = {'snw':[' Snowday ', 'snowday', 'number', (0,31)],}
+var_meta_dict = {'snw':[' snow day ', 'snowday', 'number', (0,31)],}
 
 print(os.getcwd())
 workdir=os.getcwd()
