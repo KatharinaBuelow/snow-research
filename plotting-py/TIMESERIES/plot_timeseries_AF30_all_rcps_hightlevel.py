@@ -7,7 +7,7 @@ import glob
 import numpy as np
 import seaborn as sns
 from cmcrameri import cm
-from design_matrix_tool import design_df_mean
+from design_matrix_tool import design_df
 from colortable import colortable
 
 print('seabornversion: ')
@@ -17,20 +17,28 @@ print(sns.__version__)
 '''
 Contact: Kaharina Buelow
 
-Script for plotting 4 timeseries on top of each other on one page
-rows are regions 
+Script for plotting timeseries of hightlevels on top of each other on one page
+rows are heights , each region geht its own plot
+
 Input  ../data/*.csv
 
 '''
 
-def create_plot(df,var):
+def create_plot_heightlevel_per_region(df,var, reg):
     ''' make line plot '''
 
     colrcp= {'rcp85':cm.lajolla(0.7),
              'rcp45':cm.lajolla(0.3),
              'rcp26':cm.roma(0.8)}
-    
 
+    if reg == 'Iberian P.':
+        regp = 'IberianPeninsula'
+    elif reg == 'Eastern E.':
+        regp = 'EasternEurope'
+    else:
+        regp=reg
+   
+    
     fig = plt.figure(figsize=(20, 15))
 
     # Errorbars:
@@ -51,8 +59,8 @@ def create_plot(df,var):
         hue_order=['rcp26','rcp45','rcp85'],
         palette=colrcp,
         kind='line',
-        row='region',
-        row_order=['Alps', 'Eastern E.','Iberian P.', 'Scandinavia'], 
+        row='height',
+        row_order=['3000','2500','2000','1500','1000','500'], 
         #errorbar=(lambda x: (x.min(), x.max())),
         err_style="band", 
         errorbar=('pi',50),
@@ -61,29 +69,36 @@ def create_plot(df,var):
         estimator='mean',
         height=2,
         aspect=6,
-        facet_kws={'sharey': False, 'sharex': True}
+        facet_kws={'sharey': False, 'sharex': True},
     )
-    
     g.set_axis_labels(xname, yname)
-    g.set_titles(row_template='{row_name}') #, col_template='{col_name}')
+    g.set_titles(row_template='{row_name} [m]')
     g.set(xlim=(xmin, xmax))
-    g.set(xticks=range(xmin,xmax,10))
-    #g.set(ylim=(ymin, ymax))
-    #g.set(yticks=range(ymin,ymax,dy))
-    
-    
+    g.set(xticks=range (xmin,xmax,10))
+
+
     # labely on right side of y-axis
     for s, ax in g.axes_dict.items():
         ax1 = ax.twinx()
         ax1.set_yticks(ax.get_yticks())
         ax1.set_ylim(ax.get_ylim())
-        if einheit == '%':
-            ax1.axhline(0, ls='--', c='grey')
-        
+
     # Legend at the bottom
     sns.move_legend(g, "lower center" , bbox_to_anchor=(.5, -0.03), ncol=3, title=None, frameon=False,)
-    
-    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_mean_pi_50.png')
+     # delete empty plots
+
+    if reg == 'Scandinavia':
+        g.fig.delaxes(g.axes[0,0]) #SC
+        g.fig.delaxes(g.axes[1,0]) #SC
+    elif reg == 'Eastern E.':   
+        g.fig.delaxes(g.axes[0,0]) #EA
+        g.fig.delaxes(g.axes[1,0]) #EA
+    elif reg == 'Iberian P.':
+        g.fig.delaxes(g.axes[0,0]) #IP	
+        g.fig.delaxes(g.axes[4,0]) #IP
+        g.fig.delaxes(g.axes[5,0]) #IP
+
+    plotname= os.path.join(plotdir, var+'_'+regp+'_timeseries_level_all_rcps_mean_pi_50.png')
     plt.savefig(plotname, bbox_inches="tight")
     print("Plot saved: ", plotname)
 
@@ -94,23 +109,19 @@ def create_plot(df,var):
 #-------------------------------------------
 #
 # Select what you like to plot here:
+#
+#var_meta_dict = {'AF30':[' Snowcover (AF30) ', 'AF30_diff', '%', (-50,0),(1986,2084)],}
+var_meta_dict = {'AF30':[' Snowcover (AF30) ', 'AF30', '%', (0,100),(1972,2099)],}
 
-var='snowcover'
+#var_meta_dict = {'snw':[' Snowday ', 'snowday', 'number', (0,16)],}
 
-infile=var+'-year_timeseries_all_level_owd.csv'
-#var_meta_dict = {'Temperature':[' Temperature ', 'tas_diff', 'K', (0,6),(1986,2084),1],}
-#var_meta_dict = {'Precipitation':[' Precipitation ', 'pr_pro', '%', (-30,30),(1986,2084),10],}
-var_meta_dict = {'Snowcover':['Snow cover fraction', 'snowcover', '%', (0,100),(1972,2099),10],}
-#var_meta_dict = {'Snowday':[' Snow day ', 'snowday', 'Number', (0,200),(1972,2099),50],}
-#var_meta_dict = {'swe':[' Snow water eq. ', 'snw_pro', '%', (-100,10),(1986,2084),10],}
-
-print(infile)
-
+#infile='DIFF-AF30-year_timeseries_all_level_owd.csv'
+infile='AF30-year_timeseries_all_level_owd.csv'
 print(os.getcwd())
 workdir=os.getcwd()
 
 # better put plots in work:
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/'+var
+plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/AF30'
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
@@ -130,6 +141,7 @@ print(' ')
 #
 #-------------------------------------------------
 #
+regions=('Scandinavia','Alps', 'Iberian P.', 'Eastern E.')
 
 for parameter in var_meta_dict.keys():
     varlongname = var_meta_dict[parameter][0]
@@ -137,7 +149,6 @@ for parameter in var_meta_dict.keys():
     einheit = var_meta_dict[parameter][2]
     ymin = var_meta_dict[parameter][3][0]
     ymax = var_meta_dict[parameter][3][1]
-    dy = var_meta_dict[parameter][5]
     xmin = var_meta_dict[parameter][4][0]
     xmax = var_meta_dict[parameter][4][1]
 
@@ -149,18 +160,21 @@ dfo = pd.read_csv(input)
 # because it contails more region, than we like to plot later
 #
 print(dfo.shape)
-print(dfo['height'].unique())
-df=design_df_mean(dfo)
-print(df.shape)
+df=design_df(dfo)
+
+print(df['height'].unique())
+#print('df: ',df.shape)
 
 xname = 'year'
 yname = varlongname+' ['+einheit +']'
 print(' ')
 print ('making plot for variable =', var)
 print (' ')
-
-print ('making plot for exp =', df['exp'].unique())
-print ('making plot for exp =', df[var].unique())
-create_plot(df,var)
+for reg in regions:
+    print(df['height'].unique())
+    dfr=df.loc[df['region']==reg]
+    #dfr=df.loc[df['region'].isin([reg])]
+    print(dfr['height'].unique())
+    create_plot_heightlevel_per_region(dfr,var, reg)
    
 

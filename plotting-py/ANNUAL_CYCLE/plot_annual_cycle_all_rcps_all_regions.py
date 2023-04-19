@@ -101,8 +101,8 @@ def create_plot(df,var):
 #
 # Select what you like to plot here:
 #
-#var_meta_dict = {'snw':[' Snowcover ', 'sca', '%', (0,100)],}
-var_meta_dict = {'snw':[' snow day ', 'snowday', 'number', (0,16)],}
+#var_meta_dict = {'snw':[' Snow cover fraction ', 'sca', '%', (0,100)],}
+var_meta_dict = {'snw':[' Snow day ', 'snowday', 'number', (0,16)],}
 
 
 print(os.getcwd())

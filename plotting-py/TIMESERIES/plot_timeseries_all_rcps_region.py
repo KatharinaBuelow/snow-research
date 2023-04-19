@@ -63,7 +63,6 @@ def create_plot(df,var):
         aspect=6,
         facet_kws={'sharey': True, 'sharex': True}
     )
-    
     g.set_axis_labels(xname, yname)
     g.set_titles(row_template='{row_name}') #, col_template='{col_name}')
     g.set(xlim=(xmin, xmax))
@@ -94,13 +93,13 @@ def create_plot(df,var):
 #-------------------------------------------
 #
 # Select what you like to plot here:
-var='sca'
+var='snw'
 infile='DIFF-'+var+'-year_timeseries_all_level_owd.csv'
-#var_meta_dict = {'Temperature':[' Temperature ', 'tas_diff', 'K', (0,6),(1986,2084),1],}
-#var_meta_dict = {'Precipitation':[' Precipitation ', 'pr_pro', '%', (-30,30),(1986,2084),10],}
-var_meta_dict = {'Snowcover':[' Snowcover', 'sca_pro', '%', (-100,30),(1986,2084),20],}
-#var_meta_dict = {'Snowday':[' Snowday ', 'sd_pro', '%', (-90,10),(1986,2084),10],}
-#var_meta_dict = {'swe':[' Snow water eq.', 'snw_pro', '%', (-100,10),(1986,2084),10],}
+#var_meta_dict = {'Temperature':[ r'$\Delta$ Temperature ', 'tas_diff', 'K', (0,6),(1986,2084),1],}
+#var_meta_dict = {'Precipitation':[ r'$\Delta$ Precipitation ', 'pr_pro', '%', (-30,30),(1986,2084),10],}
+#var_meta_dict = {'Snow cover fraction':[ r'$\Delta$ Snow cover fraction', 'sca_pro', '%', (-100,30),(1986,2084),20],}
+#var_meta_dict = {'Snowday':[ r'$\Delta$ Snow day ', 'sd_pro', '%', (-90,10),(1986,2084),10],}
+var_meta_dict = {'swe':[ r'$\Delta$ Snow water eq.', 'snw_pro', '%', (-100,10),(1986,2084),10],}
 
 print(infile)
 
@@ -108,9 +107,7 @@ print(os.getcwd())
 workdir=os.getcwd()
 
 # better put plots in work:
-
-plotdir=workdir.replace('plotting-py/TIMESERIES','plots/TIMESERIES/')+var
-
+plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/'+var
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)

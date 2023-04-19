@@ -59,9 +59,9 @@ df = pd.read_csv(input)
    # pro_diff_pr_2070-2099,diff_tas_2070-2099,diff_snowday_2070-2099
    # pro_diff_snowday_2070-2099,diff_sca_2070-2099
 
-#plotdir=datadir.replace('data','plots/BOXPLOTS/single_exp_region/')
+plotdir=datadir.replace('data','plots/BOXPLOTS/single_exp_region/')
 #better move to work
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/BOXPLOTS/single_exp_region/test/'
+
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
 print(' ')

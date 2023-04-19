@@ -17,10 +17,12 @@ Input  ../data/
 
 '''
 # prepare boxplot for snow cover [%]
-# var='sca'
+#var='sca'
 # prepare boxplot for snowcoverduration [day]
 # Nov-April Numer per month
-var='snowday'
+#var='snowday'
+# prepare boxplot with swe [?]
+var='snw'
 
 # prepare boxplot for each region
 reg = ['AL', 'EU', 'EA', 'IP', 'SC']
@@ -58,9 +60,9 @@ df = pd.read_csv(input)
    # pro_diff_pr_2070-2099,diff_tas_2070-2099,diff_snowday_2070-2099
    # pro_diff_snowday_2070-2099,diff_sca_2070-2099
 
-#plotdir=datadir.replace('data','plots/BOXPLOTS/single_timeslice_region/')
-# better move to wok
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/BOXPLOTS/single_timeslice_region/test/'
+plotdir=datadir.replace('data','plots/BOXPLOTS/single_timeslice_region/')
+# better move to work
+
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
@@ -79,17 +81,13 @@ df['height'].replace('4','2500', inplace=True)
 df['height'].replace('5','3000', inplace=True)
 
 df['exp_n']=df['exp']
-#df['ycategory']=df['exp'].str.cat(df['height'],sep="-")
-#print(df.shape)
 
 # 1. Plots for each region/timeslice, comparisons of the hue=experiment 
 
 sel1=df[['height','exp','region',var+'_1972-2001']]
 print('vorher: ',sel1.columns.unique())
 sel1.loc[:,'timeslice'] = '1971-2000'
-#sel1 = sel1.assign(timeslice='1971-2000')
-#sel1['timeslice']='1971-2000'
-print('nachher: ',sel1.columns.unique())
+
 sel1.rename(columns = {var+'_1972-2001':var}, inplace = True)
 
 #a) select historical rcp85
@@ -99,7 +97,6 @@ sela=sel1.loc[(sel1['exp'] == 'rcp85')]
 sela['experiment'] = sela['exp'].str.cat(sela['timeslice'],sep="-")
 selb=sela.drop(columns=['exp'])
 
-
 sel2=df[['height','exp','region',var+'_2022-2051']]
 sel2['timeslice']='2021-2050'
 sel2.rename(columns = {var+'_2022-2051':var}, inplace = True)
@@ -108,7 +105,7 @@ sel3=df[['height','exp','region',var+'_2070-2099']]
 sel3['timeslice']='2069-2098'
 sel3.rename(columns = {var+'_2070-2099':var}, inplace = True)
 
-df_neu = pd.concat([sel1,sel2,sel3])
+df_neu = pd.concat([sel1,sel2,sel3],ignore_index=True)
 
 # just to make it look nicer on the plot
 df_neu.rename(columns = {'exp':'experiment'}, inplace = True)
@@ -125,7 +122,7 @@ print(selb.columns.unique())
 time=('2021-2050', '2069-2098')
 for t in time:
     selc= df_neu.loc[ (df_neu['timeslice'] == t)]
-    sel = pd.concat([selc,selb])
+    sel = pd.concat([selc,selb], ignore_index=True)
     print('hier')
     for r in range(len(reg)):
         print('prepare plot for: ', reg[r] )

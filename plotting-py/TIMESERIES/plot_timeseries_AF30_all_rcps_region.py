@@ -102,10 +102,7 @@ print(os.getcwd())
 workdir=os.getcwd()
 
 # better put plots in work:
-#plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/AF30'
-
-plotdir=workdir.replace('plotting-py/TIMESERIES','plots/TIMESERIES/AF30')
-
+plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/AF30'
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
