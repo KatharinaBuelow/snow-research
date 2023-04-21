@@ -42,8 +42,10 @@ dfo = pd.read_csv(input)
 df=design_df(dfo)
 #!!!!!!!!!!!!!!!!!!!!!!!!!
 
-plotdir=datadir.replace('data','plots/SCATTER/change/')
+# plotdir=datadir.replace('data','plots/SCATTER/change/')
+# better put in work
 
+plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/SCATTER/change/'
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
 print(' ')
@@ -56,7 +58,7 @@ print('Output will be stored in : ', plotdir)
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Eq.', 'snw', '%', 'pro_diff', (-100,10)],}
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,5)],}
 #var_meta_dict = {'pr':[r'$\Delta$' +' Precipitation ', 'pr', '%', 'pro_diff', (-50,50)],}
-var_meta_dict = {'snw':[r'$\Delta$' +' Snowcover ', 'sca', '%', 'diff', (-60,2)],}
+var_meta_dict = {'snw':[r'$\Delta$' +' Snow cover ', 'sca', '%', 'diff', (-60,2)],}
 
 var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', 'Number', 'diff', (-35,0)],}
 #var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,10)],}
@@ -135,7 +137,9 @@ for rcp in rcps:
         g.fig.suptitle(rcp+': difference '+timeslicep[time]+ ' - 1971-2000')
         #g.fig.subplots_adjust(top=.8)
        
-        sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))
+        #sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))
+        sns.move_legend(g,'lower center', scatterpoints = 1, bbox_to_anchor=(0.45, -0.1),fancybox=True, shadow=True, ncol=5 )
+
         
         # delete empty plots
         g.fig.delaxes(g.axes[0, 3]) #SC

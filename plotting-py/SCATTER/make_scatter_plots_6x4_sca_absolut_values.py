@@ -41,9 +41,9 @@ dfo = pd.read_csv(input)
 #
 df=design_df(dfo)
 
- plotdir=datadir.replace('data','plots/SCATTER/absolute/')
+# plotdir=datadir.replace('data','plots/SCATTER/absolute/')
 # better put in work:
-#plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/SCATTER/absolute/'
+plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/SCATTER/absolute/'
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
@@ -55,7 +55,7 @@ print('Output will be stored in : ', plotdir)
 #
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Equivalent', 'snw', '%', 'pro_diff', (-100,10)],}
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,10)],}
-var_meta_dict = {'snw':[' Snowcover ', 'sca', '%', 'abs', (0,110)],}
+var_meta_dict = {'snw':[' Snow cover ', 'sca', '%', 'abs', (0,110)],}
 var2_meta_dict = {'temp':[' Temperature', 'tas', 'K', 'abs', (-16, 10)],}
 		       
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -131,8 +131,9 @@ for rcp in rcps:
         g.fig.suptitle(rcp+': '+timeslicep[time])
         #g.fig.subplots_adjust(top=.8)
        
-        sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))
-    
+        #sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))
+        sns.move_legend(g,'lower center', scatterpoints = 1, bbox_to_anchor=(0.45, -0.1),fancybox=True, shadow=True, ncol=5 )
+        
         # delete empty plots
         g.fig.delaxes(g.axes[0, 3]) #SC
         g.fig.delaxes(g.axes[1, 3]) #SC
@@ -142,7 +143,7 @@ for rcp in rcps:
         g.fig.delaxes(g.axes[4, 2]) #IP
         g.fig.delaxes(g.axes[5, 2]) #IP
         
-        plotname= plotdir+'test_'+rcp+'_'+variable+'-'+variable2+'_scatter_'+timeslice[time]+'.png'
+        plotname= plotdir+rcp+'_'+variable+'-'+variable2+'_scatter_'+timeslice[time]+'.png'
         plt.savefig(plotname, bbox_inches="tight")
 
         
