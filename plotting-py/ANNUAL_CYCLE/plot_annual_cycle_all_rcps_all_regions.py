@@ -117,7 +117,7 @@ print(' ')
 print('Output will be stored in : ', plotdir)
 
 datadir=workdir.replace('plotting-py/ANNUAL_CYCLE','data')
-infile='snw_tas_pr_snowday-snowcover_timeslice_annalcyle_all_level_owd_norm.csv'
+infile='snw_tas_pr_snowday-snowcover_timeslice_annualcyle_all_level_owd_norm2.csv'
 input=os.path.join(datadir,infile)
 print(' ')
 print ('Reading data from = ', input)

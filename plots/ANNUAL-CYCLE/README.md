@@ -1,0 +1,3 @@
+### work in progress
+
+30 year mean of monthly snow covered area calculated for four regions: Alps, Eastern Europe, Iberian Peninsula, Scandinavia (top to bottom). The results are displayed for scenario RCP2.6 (blue), RCP4.5 (yellow), RCP8.5 (red) (left to right). The ensemble mean is indicated with the dark line and the shaded area covers the ensemble range from 2.5 to 97.5 percentile. The results are displayed for three time slices, 1971-2000, 2021-2050, 2069-2098, indicated by increasing intensity of the colour. Attention: different scalling for the y-axis is used.

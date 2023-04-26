@@ -1,0 +1,2 @@
+### work in progress
+30 year average number of snow days on different height levels from 500 to 3000 m for the near future 2021-2050 on the left and for the far future on the right and from top to bottom for the Alps (AL), Eastern Europe (EA), Iberian Peninsula (IP) and Scandinavia (SC). Each plot depicts the historical time period. In each box plot, the whiskers go from the minimum to the maximum value. The coloured box shows the inter quartile range (IQR) from the 25^{th} percentile to the 75^{th} percentile and the median by the vertical line in the middle.
