@@ -1,3 +1,0 @@
-### work in progess
-
-30-year running mean of annual temperature change for %the years 1986 to 2084 compared to each corresponding mean temperature of the time slice 1971 to 2000 is calculated for four regions (top to bottom: Alps, Eastern Europe, Iberian Peninsula, Scandinavia). The results are displayed for scenario RCP8.5 (red), RCP4.5 (yellow), RCP2.6 (blue). The ensemble mean is indicated with the dark line and the shaded area covers the range from the 2.5 to 97.5 percentile of all simulations.
