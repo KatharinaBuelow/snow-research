@@ -6,14 +6,14 @@ Christain Steger (ETH) and Sven Kotlarski (Meteo Swiss), Claas Teichmann, Kathar
 This git repository holds the GERICS contribution
 
 
-## 1.) Indice calculation have been calculated on mistral (dkrz)
+## 1.) Indice calculation has been calculated on mistral (dkrz)
 
  - cdo has been used to calculate indices for snw and snowdays (annual, seasonal, NDJFMA, monthly means)
  - a snow day is defined as 3 cm of snow. We used snw (snow water equivalent), which most RCMs provided.
  - snowday: snw >= 9.36 [kg/m²]; snd >= 0.03 [m] (snw = 0.03 m *0.312 kg/m3)
  - If snw for the RCM was not provided, we used snd (snow depth) and coverted it to snw by mulipying it with the desity of 0.312 kg/m³
       
-## 2.) Snow research
+## 2.) Area mean calculation
 
 * You need some fixed field:
     * areacella
