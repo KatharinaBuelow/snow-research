@@ -10,8 +10,8 @@ This git repository holds the GERICS contribution
 
  - cdo has been used to calculate indices for snw and snowdays (annual, seasonal, NDJFMA, monthly means)
  - a snow day is defined as 3 cm of snow. We used snw (snow water equivalent), which most RCMs provided.
- - snowday: snw >= 9.36 [kg/m²]; snd >=0.03 [m] (snw = 0.03 m *0.312 kg/m3)
- - If snw for the RCM was not provided, we used snd and coverted it to snw by mulipying it with the desity of 0.312 kg/m³
+ - snowday: snw >= 9.36 [kg/m²]; snd >= 0.03 [m] (snw = 0.03 m *0.312 kg/m3)
+ - If snw for the RCM was not provided, we used snd (snow depth) and coverted it to snw by mulipying it with the desity of 0.312 kg/m³
       
 ## 2.) Snow research
 
@@ -23,11 +23,12 @@ This git repository holds the GERICS contribution
 
 ### Results for Prudence Regions:
 
-* Some model accumulate snow, which leads to unrealistic values. These Gridboxes are masked out and not included in the calculation. This finaly leads to areas which have less than 5 gridboxes for some RCMS, so they will not be used for the area mean.
+* Some model accumulate snow, which leads to unrealistic values. These Gridboxes are masked out and not included in the calculation.
+This finally leads to areas which have less than 5 gridboxes for some RCMs, so they will not be used for the area mean.
 
        See pictute: Grid_cells_per_elev_class.png
 
-This is the reason why you do not find the same number of simulations at each region and hight level.
+This is the reason why you do not find the same number of simulations at each region and height level.
 
 * Timeslice 1971-2000, 2021-2050, 2070-2099
      
