@@ -115,6 +115,9 @@ f.) timeseries for annual mean AF30 (area of at least 30-days of snow cover area
 
 
 
+Original input data can de found here: 
+	
+	https://cds.climate.copernicus.eu/datasets/projections-cordex-domains-single-levels?tab=overview
 
 
 
