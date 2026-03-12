@@ -22,7 +22,7 @@ Input  ../data/
 # Nov-April Numer per month
 #var='snowday'
 # prepare boxplot with swe [?]
-var='snw'
+var='sca'
 
 # prepare boxplot for each region
 reg = ['AL', 'EU', 'EA', 'IP', 'SC']
