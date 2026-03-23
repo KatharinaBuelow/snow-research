@@ -52,7 +52,7 @@ df=design_df(dfo)
 
 # plotdir=datadir.replace('data','plots/SCATTER/absolute/')
 # better put in work:
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/SCATTER/absolute/'
+plotdir=workdir+'/plots/absolute/'
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
@@ -62,10 +62,11 @@ print('Output will be stored in : ', plotdir)
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Select what you like to plot here:
 #
-#var_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Equivalent', 'snw', '%', 'pro_diff', (-100,10)],}
+var2_meta_dict = {'snw':['Snow Water E.', 'snw', 'mm', 'abs', (0,1000)],}
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,10)],}
-var_meta_dict = {'snw':[' Snow cover ', 'sca', '%', 'abs', (0,110)],}
-var2_meta_dict = {'temp':[' Temperature', 'tas', 'K', 'abs', (-16, 10)],}
+#var_meta_dict = {'snw':[' Snow cover ', 'sca', '%', 'abs', (0,110)],}
+var_meta_dict = {'temp':[' Temperature', 'tas', '°C', 'abs', (-15, 10)],}
+#var_meta_dict = {'pr':['Precipitation', 'pr', 'mm/day', 'abs', (0,10)],}
 		       
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -115,9 +116,11 @@ for rcp in rcps:
         
         x_column=variable+'_'+timeslice[time]
         y_column=variable2+'_'+timeslice[time]
-        sel['y_columnC']=sel[y_column]-273.15
+        sel['x_columnC']=sel[x_column]-273.15
         
-        g=sns.relplot(x=x_column, y='y_columnC',
+        g=sns.relplot(#x=x_column,
+                      x='x_columnC',
+                      y=y_column,
                       data=sel, kind='scatter',
                       style='GCM',
                       hue='RCM',s=30,
@@ -137,7 +140,7 @@ for rcp in rcps:
         g.set_titles(row_template='{row_name} [m]', col_template='{col_name}') 
         g.set(xlim=(xmin, xmax))
         g.set(ylim=(ymin, ymax))
-        g.fig.suptitle(rcp+': '+timeslicep[time])
+        g.fig.suptitle(rcp+': '+timeslicep[time]+' (November - April)')
         #g.fig.subplots_adjust(top=.8)
        
         #sns.move_legend(g, "center right" ) #, bbox_to_anchor=(.55, .45))

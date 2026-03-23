@@ -1,9 +1,9 @@
 #! /usr/bin/python
 # coding: utf-8
 from __future__ import annotations
-
 import sys
 from pathlib import Path
+
 
 # Allow running this script from any working directory by ensuring the repo
 # root (the parent of `plotting_py/`) is on sys.path.
@@ -21,6 +21,7 @@ from cmcrameri import cm
 from plotting_py.TIMESERIES.colortable import colortable
 from plotting_py.TIMESERIES.design_matrix_tool import design_df_mean
 #from matplotlib.transforms import ScaledTranslation
+
 
 '''
 Contact: Kaharina Buelow
@@ -52,7 +53,7 @@ def create_plot(df, var, xname, yname, ymin, ymax, plotdir):
                   data=df,
                   err_style="band", 
                   errorbar=('pi',95),
-                  estimator='mean',
+                  estimator='median',
                   hue='rcp_timeslice',
                   hue_order=['rcp26_1971-2000','rcp26_2021-2050','rcp26_2069-2098',
                              'rcp45_1971-2000','rcp45_2021-2050','rcp45_2069-2098',
@@ -109,7 +110,7 @@ def create_plot(df, var, xname, yname, ymin, ymax, plotdir):
 
     sns.move_legend(g,'lower center', scatterpoints = 1, bbox_to_anchor=(0.45, -0.1),fancybox=True, shadow=True, ncol=3 )
 
-    plotname = os.path.join(plotdir, f"all_regions_{var}_annualcycle_all_rcps.png")
+    plotname = os.path.join(plotdir, f"all_regions_{var}_median_annualcycle_all_rcps.png")
     plt.savefig(plotname, bbox_inches="tight")
 
     return
@@ -121,9 +122,9 @@ def create_plot(df, var, xname, yname, ymin, ymax, plotdir):
 #
 # Select what you like to plot here:
 #
-var_meta_dict = {'snw':[' Snow cover fraction ', 'sca', '%', (0,80)],}
+#var_meta_dict = {'snw':[' Snow cover fraction ', 'sca', '%', (0,80)],}
 #var_meta_dict = {'snw':[' Snow day ', 'snowday', 'number', (0,25)],}
-#var_meta_dict = {'snw':[' Snow water eq. ', 'snw', 'mm', (0,250)],}
+var_meta_dict = {'snw':[' Snow water eq. ', 'snw', 'mm', (0,250)],}
 
 print(os.getcwd())
 workdir=os.getcwd()

@@ -1,6 +1,5 @@
 #! /usr/bin/python
 # coding: utf-8
-from __future__ import annotations
 
 import sys
 from pathlib import Path
@@ -30,13 +29,35 @@ Script for plotting 4 timeseries on top of each other on one page
 rows are regions 
 Input  ../data/*.csv
 
+USAGE:
+PLOT_MODE=members python plot_timeseries_all_rcps_region.py
+PLOT_MODE=ensemble_mean python plot_timeseries_all_rcps_region.py
+
+if you like to change pi or mean to median you have to do it in the code
 '''
 
-def create_plot(df,var):
-    ''' make line plot '''
 
-    colrcp= {'rcp85':cm.lajolla(0.7),
-             'rcp45':cm.lajolla(0.3),
+def create_plot(df, var, mode: str = "ensemble_mean"):
+    """Make line plots.
+
+    Notes on what gets plotted:
+    - `design_df_mean()` filters the *height class* to `height == "mean"`.
+    - Seaborn `kind="line"` with `estimator="mean"` computes an additional
+      *ensemble mean* at each (region, exp, year) across all members (files).
+
+    Parameters
+    ----------
+    df:
+        Input dataframe after design_df_mean.
+    var:
+        Column name to plot.
+    mode:
+        - "ensemble_mean": one mean line per (region, exp) with error band.
+        - "members": plot one line per `file` (no aggregation).
+    """
+
+    colrcp= {'rcp45':cm.lajolla(0.7),
+             'rcp85':cm.lajolla(0.3),
              'rcp26':cm.roma(0.8)}
     
 
@@ -52,26 +73,53 @@ def create_plot(df,var):
     # errorbar =('pi',50) e.g., to show the inter-quartile range
     # errorbar =('pi',100) show all; same like: (lambda x: (x.min(), x.max()))
     
-    g=sns.relplot(
+    mode = (mode or "").strip().lower()
+    if mode not in {"ensemble_mean", "members"}:
+        raise ValueError(f"Unknown mode={mode!r}. Use 'ensemble_mean' or 'members'.")
+
+    # Seaborn API compatibility: `errorbar=` exists starting in seaborn 0.12.
+    try:
+        major, minor = (int(x) for x in sns.__version__.split(".")[:2])
+    except Exception:
+        major, minor = (0, 0)
+    seaborn_has_errorbar = (major, minor) >= (0, 12)
+
+    relplot_kwargs = dict(
         x='year',
         y=var,
         data=df,
         hue='exp',
-        hue_order=['rcp26','rcp45','rcp85'],
+        hue_order=['rcp26', 'rcp45', 'rcp85'],
         palette=colrcp,
         kind='line',
         row='region',
-        row_order=['Alps', 'Eastern E.','Iberian P.', 'Scandinavia'], 
-        #errorbar=(lambda x: (x.min(), x.max())),
-        err_style="band", 
-        errorbar=('pi',95),
-        #ci='sd',
-        #estimator="median", 
-        estimator='mean',
+        row_order=['Alps', 'Eastern E.', 'Iberian P.', 'Scandinavia'],
         height=2,
         aspect=6,
-        facet_kws={'sharey': True, 'sharex': True}
+        facet_kws={'sharey': True, 'sharex': True},
     )
+
+    if mode == "ensemble_mean":
+        extra_kwargs = {
+            "err_style": "band",
+            "estimator": "mean",
+        }
+        if seaborn_has_errorbar:
+            extra_kwargs["errorbar"] = ("pi", 100)
+        else:
+            # Older seaborn: fall back to bootstrap CI.
+            extra_kwargs["ci"] = 95
+        g = sns.relplot(**relplot_kwargs, **extra_kwargs)
+    else:
+        # Plot raw member lines: one line per file, no aggregation.
+        # This is the best way to confirm whether "straight" comes from averaging.
+        g = sns.relplot(
+            **relplot_kwargs,
+            units='file',
+            estimator=None,
+            lw=0.7,
+            alpha=0.20,
+        )
     g.set_axis_labels(xname, yname)
     g.set_titles(row_template='{row_name}') #, col_template='{col_name}')
     g.set(xlim=(xmin, xmax))
@@ -91,7 +139,8 @@ def create_plot(df,var):
     # Legend at the bottom
     sns.move_legend(g, "lower center" , bbox_to_anchor=(.5, -0.03), ncol=3, title=None, frameon=False,)
     
-    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_mean_pi_95.png')
+    suffix = "mean_pi_100" if mode == "ensemble_mean" else "members"
+    plotname = os.path.join(plotdir, f"{var}_timeseries_all_rcps_{suffix}.png")
     plt.savefig(plotname, bbox_inches="tight")
     print("Plot saved: ", plotname)
 
@@ -103,20 +152,23 @@ def create_plot(df,var):
 #
 # Select what you like to plot here:
 var='snw'
-infile='DIFF-'+var+'-year_timeseries_all_level_owd.csv'
+#infile='DIFF-'+var+'-year_timeseries_all_level_owd.csv'
+infile=var+'-year_timeseries_all_level_owd.csv'
 #var_meta_dict = {'Temperature':[ r'$\Delta$ Temperature ', 'tas_diff', 'K', (0,6),(1986,2084),1],}
 #var_meta_dict = {'Precipitation':[ r'$\Delta$ Precipitation ', 'pr_pro', '%', (-30,30),(1986,2084),10],}
 #var_meta_dict = {'Snow cover fraction':[ r'$\Delta$ Snow cover fraction', 'sca_pro', '%', (-100,30),(1986,2084),20],}
 #var_meta_dict = {'Snowday':[ r'$\Delta$ Snow day ', 'sd_pro', '%', (-90,10),(1986,2084),10],}
-var_meta_dict = {'swe':[ r'$\Delta$ Snow water eq.', 'snw_pro', '%', (-100,10),(1986,2084),10],}
-
+#var_meta_dict = {'swe':[ r'$\Delta$ Snow water eq.', 'snw_pro', '%', (-100,10),(1986,2084),10],}
+#var_meta_dict = {'swe':[ r'$\Delta$ Snow water eq.', 'snw_diff', 'mm', (-100,10),(1986,2084),10],}
+var_meta_dict = {'snw':[ r'$\Delta$ Snow water eq.', 'snw', 'mm', (-100,10),(1986,2084),10],}
 print(infile)
 
 print(os.getcwd())
 workdir=os.getcwd()
 
-# better put plots in work:
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/'+var
+# plotdir:
+plotdir=os.path.join(workdir,'plots','TIMESERIES',var)
+
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
@@ -166,7 +218,12 @@ print ('making plot for variable =', var)
 print (' ')
 
 print ('making plot for exp =', df['exp'].unique())
-print ('making plot for exp =', df[var].unique())
-create_plot(df,var)
+try:
+    print('value summary:')
+    print(df[var].describe())
+except Exception:
+    pass
+PLOT_MODE = os.environ.get("PLOT_MODE", "ensemble_mean")
+create_plot(df, var, mode=PLOT_MODE)
    
 

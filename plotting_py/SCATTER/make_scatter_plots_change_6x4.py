@@ -1,5 +1,6 @@
 #! /usr/bin/python
 # coding: utf-8
+
 from __future__ import annotations
 
 import sys
@@ -53,22 +54,10 @@ df=design_df(dfo)
 
 # plotdir=datadir.replace('data','plots/SCATTER/change/')
 # better put in work
-from __future__ import annotations
-
-import sys
-from pathlib import Path
-
-_REPO_ROOT = Path(__file__).resolve().parents[2]
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
-
-
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/SCATTER/change/'
+plotdir=workdir+'/plots/change/'
 if not os.path.exists(plotdir):
-import glob
-import seaborn as sns
-from cmcrameri import cm
-from plotting_py.SCATTER.design_matrix_tool import design_df
+    os.makedirs(plotdir)
+
 print(' ')
 print('Output will be stored in : ', plotdir)
 
@@ -76,14 +65,16 @@ print('Output will be stored in : ', plotdir)
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Select what you like to plot here:
 #
-#var_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Eq.', 'snw', '%', 'pro_diff', (-100,10)],}
+var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Eq.', 'snw', '%', 'pro_diff', (-100,10)],}
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,5)],}
 #var_meta_dict = {'pr':[r'$\Delta$' +' Precipitation ', 'pr', '%', 'pro_diff', (-50,50)],}
-var_meta_dict = {'snw':[r'$\Delta$' +' Snow cover ', 'sca', '%', 'diff', (-60,2)],}
+#var_meta_dict = {'snw':[r'$\Delta$' +' Snow cover ', 'sca', '%', 'diff', (-60,2)],}
 
-var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', 'Number', 'diff', (-35,0)],}
+#var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', 'Number', 'diff', (-35,0)],}
 #var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,10)],}
-#var2_meta_dict = {'temp':[r'$\Delta$' +' Temperature', 'tas', 'K', 'diff', (0, 7)],}
+var_meta_dict = {'temp':[r'$\Delta$' +' Temperature', 'tas', 'K', 'diff', (0, 7)],}
+#var_meta_dict = {'pr':[r'$\Delta$' +' Precipitation', 'pr', '%', 'pro_diff', (-50, 50)],}
+
 datadir=workdir.replace('plotting_py/SCATTER','data')
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -171,7 +162,7 @@ for rcp in rcps:
         g.fig.delaxes(g.axes[4, 2]) #IP
         g.fig.delaxes(g.axes[5, 2]) #IP
         
-        plotname= plotdir+rcp+'_'+variable+'-'+variable2+'_absolut_scatter_'+timeslice[time]+'_1972-2001.png'
+        plotname= plotdir+rcp+'_'+variable+'-'+variable2+'_change_scatter_'+timeslice[time]+'_1972-2001.png'
                
         plt.savefig(plotname, bbox_inches="tight")
 
