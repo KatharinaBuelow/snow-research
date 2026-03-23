@@ -35,8 +35,8 @@ Input  ../data/*.csv
 def create_plot(df,var):
     ''' make line plot '''
 
-    colrcp= {'rcp85':cm.lajolla(0.7),
-             'rcp45':cm.lajolla(0.3),
+    colrcp= {'rcp45':cm.lajolla(0.7),
+             'rcp85':cm.lajolla(0.3),
              'rcp26':cm.roma(0.8)}
     
 
@@ -66,8 +66,8 @@ def create_plot(df,var):
         err_style="band", 
         errorbar=('pi',50),
         #ci='sd',
-        #estimator="median", 
-        estimator='mean',
+        estimator="median", 
+        #estimator='mean',
         height=2,
         aspect=6,
         facet_kws={'sharey': False, 'sharex': True}
@@ -92,7 +92,7 @@ def create_plot(df,var):
     # Legend at the bottom
     sns.move_legend(g, "lower center" , bbox_to_anchor=(.5, -0.03), ncol=3, title=None, frameon=False,)
     
-    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_mean_pi_50.png')
+    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_median_pi_50.png')
     plt.savefig(plotname, bbox_inches="tight")
     print("Plot saved: ", plotname)
 
@@ -104,22 +104,22 @@ def create_plot(df,var):
 #
 # Select what you like to plot here:
 
-var='snowcover'
-
+#var='snowcover'
+var='snw'
 infile=var+'-year_timeseries_all_level_owd.csv'
 #var_meta_dict = {'Temperature':[' Temperature ', 'tas_diff', 'K', (0,6),(1986,2084),1],}
 #var_meta_dict = {'Precipitation':[' Precipitation ', 'pr_pro', '%', (-30,30),(1986,2084),10],}
-var_meta_dict = {'Snowcover':['Snow cover fraction', 'snowcover', '%', (0,100),(1972,2099),10],}
+#var_meta_dict = {'Snowcover':['Snow cover fraction', 'snowcover', '%', (0,100),(1972,2099),10],}
 #var_meta_dict = {'Snowday':[' Snow day ', 'snowday', 'Number', (0,200),(1972,2099),50],}
-#var_meta_dict = {'swe':[' Snow water eq. ', 'snw_pro', '%', (-100,10),(1986,2084),10],}
+var_meta_dict = {'swe':[' Snow water eq. ', 'snw', 'mm', (-100,10),(1972,2099),10],}
 
 print(infile)
 
 print(os.getcwd())
 workdir=os.getcwd()
 
-# better put plots in work:
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/'+var
+# plotdir
+plotdir=os.path.join(workdir,'plots','TIMESERIES',var)
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)

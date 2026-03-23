@@ -67,7 +67,7 @@ def create_plot(df,var):
         row_order=['3000','2500','2000','1500','1000','500'],
         #errorbar=(lambda x: (x.min(), x.max())),
         err_style="band", 
-        errorbar=('pi',95),
+        errorbar=('pi',100),
         #ci='sd',
         #estimator="median", 
         estimator='mean',
@@ -102,7 +102,7 @@ def create_plot(df,var):
     sns.move_legend(g, "lower center" , bbox_to_anchor=(.5, -0.03), ncol=3, title=None, frameon=False,)
 
    
-    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_heights_regions_mean_pi_95.png')
+    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_heights_regions_mean_pi_100.png')
     plt.savefig(plotname, bbox_inches="tight")
     print("Plot saved: ", plotname)
 
@@ -116,19 +116,20 @@ def create_plot(df,var):
 
 # var_meta_dict = {'Temperature':[r'$\Delta$ Temperature ', 'tas_diff', 'K', (0,5),(1986,2084),1],}
 #var_meta_dict = {'Precipitation':[r'$\Delta$ Precipitation ', 'pr_pro', '%', (-30,30),(1986,2084),10],}
-var_meta_dict = {'Snowcover':[r'$\Delta$ Snowcover ', 'sca_pro', '%', (-100,30),(1986,2084),20],}
+#var_meta_dict = {'Snowcover':[r'$\Delta$ Snowcover ', 'sca_pro', '%', (-100,30),(1986,2084),20],}
 #var_meta_dict = {'Snowday':[' Snowday ', 'sd_pro', '%', (-100,0),(1986,2084),10],}
-#var_meta_dict = {'snw':[' Snow water eq.', 'snw_pro', '%', (-100,10),(1986,2084),10],}
+var_meta_dict = {'snw':[' Snow water eq.', 'snw_pro', '%', (-100,10),(1986,2084),10],}
 
-var_name='sca'
+var_name='snw'
 infile='DIFF-'+var_name+'-year_timeseries_all_level_owd.csv'
 print(infile)
 
 print(os.getcwd())
 workdir=os.getcwd()
 
-# better put plots in work:
-plotdir='/work/ch0636/g300047/SNOW-RESEARCH/plots/TIMESERIES/'+var_name
+# plotdir
+plotdir=os.path.join(workdir,'plots','TIMESERIES',var_name)
+
 
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
