@@ -5,6 +5,17 @@ Christian Steger (ETH) and Sven Kotlarski (Meteo Swiss), Claas Teichmann, Kathar
     
 This git repository holds the GERICS contribution
 
+## 0.) Documentation
+The documentation is made with mkdocs.
+To establish the documentation stored in docs
+
+	mkdocs serve
+
+see the result on 
+	http://127.0.0.1:8000/
+
+### environments
+it is better to set up your own envoronment for each task, because everything changes to quickly. Just in March 2026 seaborn is better to install in a python3.10 environment, otherwise  the dependencies do not work, everything else seemed fine with the latest python version.
 
 ## 1.) Indice calculation has been calculated on mistral (dkrz)
 
@@ -38,7 +49,7 @@ This is the reason why you do not find the same number of simulations at each re
     - timeseries of 30 year running mean of annual change compared to 1971-2000  averaged over Prudence-Region and height level
     - Annual cycle averaged of time slice and prudence region and height level.
 
- * New Index af30, area of annual snowcover with at least 30 snowdays/year.
+ * New Index SCT30D (af30), area of annual snowcover with at least 30 snowdays/year.
 
  * The year is always from September to August
  
@@ -49,19 +60,25 @@ The data for plotting is available in
 
     data/
 
-preview of plots:
 
-    https://drive.google.com/drive/folders/1xDmv63OY1dKlB8qv-CmSXQOllZQ6C4lh
+a.) ANNUAL CYCLE from September to August for the following Indices:
+	* number of snow days
+	* snow covered area
+	* snow water equivalent
 
-a.) ANNUAL CYCLE (e.g. Sept.71 till August.01) for number of snowdays and snow covered area [sca]
+To plot all regions, time slices and scenarios, with variable y-axis, on one sheet use
+
+		plot_annual_cycle_all_rcps_all_regions.py
+
+Inside the code you have to select which index you like to plot.
+
 	What means % of sca:
 	The monthly values are all adjusted to months with the length of 30 days.
   * for each scenario, plotting all height levels and 4 prudence regions:
 		plot_annual_cycle_all.py
   * for each region, plotting all scenarios:
 		plot_annual_cycle_all_rcps_region.py
-  * all regions and scenarios, but with variable y-axis:
-		plot_annual_cycle_all_rcps_all_regions.py
+  
 	
 b.) HORIZONTAL
 
