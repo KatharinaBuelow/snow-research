@@ -1,4 +1,4 @@
-# git-repository for snow-research
+# Repository for snow-research
 # 
 :snowman: The snow research is a cooperation with
 Christian Steger (ETH) and Sven Kotlarski (Meteo Swiss), Claas Teichmann, Katharina Bülow
