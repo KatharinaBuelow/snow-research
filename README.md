@@ -5,61 +5,35 @@ Christian Steger (ETH) and Sven Kotlarski (Meteo Swiss), Claas Teichmann, Kathar
     
 This git repository holds the GERICS contribution
 
-## 0.) Documentation
-The documentation is made with mkdocs.
-To establish the documentation stored in docs
+## 1.) Documentation
+Please consider the documentation for detailed information
 
-	mkdocs serve
+### Serve the documentation locally
 
-see the result on 
-	http://127.0.0.1:8000/
+```bash
+mkdocs serve
+```
+
+Then open [http://127.0.0.1:8000/](http://127.0.0.1:8000/) in your browser.
+
 
 ### environments
 it is better to set up your own envoronment for each task, because everything changes to quickly. Just in March 2026 seaborn is better to install in a python3.10 environment, otherwise  the dependencies do not work, everything else seemed fine with the latest python version.
 
-## 1.) Indice calculation has been calculated on mistral (dkrz)
+## 2.) Indice calculation has been calculated on mistral (dkrz) for "PRUDENCE REGIONS "
 
  - cdo has been used to calculate indices for snw and snowdays (annual, seasonal, NDJFMA, monthly means)
  - a snow day is defined as 3 cm of snow. We used snw (snow water equivalent), which most RCMs provided.
  - snowday: snw >= 9.36 [kg/m²]; snd >= 0.03 [m] (snw = 0.03 m * 0.312 kg/m³)
- - If snw for the RCM was not provided, we used snd (snow depth) and converted it to snw by multiplying it with the density of 0.312 kg/m³
-      
-## 2.) Area mean calculation
+ - If snw for the RCM was not provided, we used snd (snow depth) and converted it to snw by multiplying it with the density of 0.312 kg/m³.
 
-* You need some fixed field:
-    * areacella
-	* land sea mask (common lsm, at least 50% land cover in all models)
-	* orography 
-	* mask of accumulated snow 
-
-### Results for Prudence Regions:
-
-* Some models accumulate snow, which leads to unrealistic values. These gridboxes are masked out and not included in the calculation.
-This finally leads to areas which have less than 5 gridboxes for some RCMs, so they will not be used for the area mean.
-
-	   See picture: Grid_cells_per_elev_class.png
-
-This is the reason why you do not find the same number of simulations at each region and height level.
-
-* Timeslice 1971-2000, 2021-2050, 2070-2099
-     
-* Snow water equivalent [mm], snow covered area [%] (part of full prudence region) and number of snowdays:
-    - areamean for prudence region and on different height levels for timeslices
-    - timeseries per year averaged over Prudence-Region and height level
-    - timeseries of 30 year running mean of annual change compared to 1971-2000  averaged over Prudence-Region and height level
-    - Annual cycle averaged of time slice and prudence region and height level.
-
- * New Index SCT30D (af30), area of annual snowcover with at least 30 snowdays/year.
-
- * The year is always from September to August
- 
 
 ## 3.) Making plots *plotting-py*
 
-The data for plotting is available in
+The data for plotting is available for the
+timeslice 1971-2000, 2021-2050, 2070-2099 and annual in:
 
     data/
-
 
 a.) ANNUAL CYCLE from September to August for the following Indices:
 	* number of snow days
@@ -78,8 +52,7 @@ Inside the code you have to select which index you like to plot.
 		plot_annual_cycle_all.py
   * for each region, plotting all scenarios:
 		plot_annual_cycle_all_rcps_region.py
-  
-	
+  	
 b.) HORIZONTAL
 
 The horizontal plots for snow cover duration and snow water equivalent , for the time slices 1971-2000, 2021-2050, 2070-2099, as absolute values or difference including robustness are produced with the notebook:
@@ -97,11 +70,7 @@ The input data is available:
 
 	![Ensemble Mean Difference Snow Cover Duration](PLOTS/ensemble_mean_diff_snowcoverduration_all_oT_YLGrBl.png)
  
-
-
 c.) SCATTER (Nov-April)
-
-	
 
     Before starting the scripts, you need to adjust the input and output
     directory and select which variable you like to plot 
@@ -150,12 +119,6 @@ f.) Timeseries for annual mean AF30 (area of at least 30-days of snow cover area
 	Unit: % of covered area for each region SC, EA, AL, IP, EU
 
 	(The bandwidth is 'pi'=50, Interquartile range)
-	     
-
-
-
-
-
 
 ## :snowflake: Ideas and hints and links:
 
@@ -168,7 +131,4 @@ We try to use the colors from https://www.fabiocrameri.ch/colourmaps/
 Crameri, F. (2018). Scientific colour-maps. Zenodo. http://doi.org/10.5281/zenodo.1243862
 
 Crameri, F. (2018), Geodynamic diagnostics, scientific visualisation and StagLab 3.0, Geosci. Model Dev., 11, 2541-2562, doi:10.5194/gmd-11-2541-2018.
-
-I used :information_desk_person: https://www.youtube.com/c/KimberlyFessel/videos
-to learn a lot about plotting.
 

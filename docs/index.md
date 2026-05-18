@@ -1,34 +1,38 @@
 # Snow Research Documentation
 
-Welcome to the documentation for the Snow Research project.
+Welcome to the documentation of the **GERICS Snow Research** project.
+
+This is a cooperation between:
+
+- **Katharina Bülow** (GERICS)
+- **Christian Steger** (ETH Zürich)
+- **Sven Kotlarski** (MeteoSwiss)
+- **Claas Teichmann** (GERICS)
+
+This repository contains the GERICS contribution to the project, including index calculation workflows, area mean computations, and a variety of plotting scripts and notebooks.
+
+---
+## Paper:
+
+
+## Navigation
+
+Use the tabs above to navigate to:
+
+- **Introduction** to the investigation on futuire snow evolution in Europe over the 21st century
+- **Data & Indices** – how snow indices are computed on DKRZ/mistral and how area means are derived
+- **Plotting** – instructions for each plot type (annual cycle, horizontal maps, scatter, box plots, timeseries)
+- **Ensemble & Statistics** – description of the robustness
+- **Setup & Environment** – Python environment recommendations
 
 ---
 
-<!-- The content below is adapted from README.md. Replace this section with the full README.md content if needed. -->
+## Repository Structure
 
-## Project Overview
+| Directory | Description |
+|-----------|-------------|
+| `data/` | Pre-processed CSV files used as input for all plotting scripts |
+| `plotting_py/` | Python scripts and notebooks organised by plot type |
+| `docs/` | This MkDocs documentation |
+| `grid/` | Grid definition files for individual RCMs |
 
-This project analyzes snow cover, snow day, precipitation, and temperature data for various regions and timeslices. It includes scripts and notebooks for data processing and visualization.
-
-## Data
-
-- Timeslice 1971-2000, 2021-2050, 2070-2099
-- Notebooks available for data download and analysis
-
-## Plots
-
-- ![Ensemble Mean Difference Snow Cover Duration](../PLOTS/ensemble_mean_diff_snowcoverduration_all_oT_YLGrBl.png)
-
-## Scripts
-
-- make_scatter_plots_6x4_sca_absolute_values.py
-- make_scatter_plots_change_6x4.py
-
-## Utilities
-
-- scattertable.py: Colors and markers
-- design_matrix_tool.py: Data cleaning
-
----
-
-For more details, see the README.md file or explore the notebooks and scripts in the repository.

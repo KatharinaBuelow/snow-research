@@ -1,3 +1,43 @@
 site_name: Snow Research Documentation
+site_description: Documentation for the GERICS snow research project in cooperation with ETH and MeteoSwiss
+site_author: Katharina Bülow, Christian Steger, Sven Kotlarski, Claas Teichmann
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: custom
+      accent: light blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
+
 nav:
   - Home: index.md
+  - Introduction: introduction.md
+  - Data & Indices:
+      - Data: data_method.md
+      - Index Calculation: indices.md
+      - Derived Data: derived_data.md
+  - Plotting:
+      - Horizontal Plots: plotting/horizontal.md
+      - Timeseries: plotting/timeseries.md
+      - Box Plots: plotting/boxplots.md
+      - Annual Cycle: plotting/annual_cycle.md
+      - Scatter Plots: plotting/scatter.md
+  - Ensemble Statistics: ensemble.md
+  - Setup & Environment: setup.md
