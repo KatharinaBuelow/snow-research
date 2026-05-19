@@ -55,7 +55,7 @@ Inside the code you have to select which index you like to plot.
   	
 b.) HORIZONTAL
 
-The horizontal plots for snow cover duration and snow water equivalent , for the time slices 1971-2000, 2021-2050, 2070-2099, as absolute values or difference including robustness are produced with the notebook:
+The horizontal plots for snow cover duration and snow water equivalent , for the time slices 1971-2000, 2021-2050, 2070-2099, as absolute values or difference including robustness are produced with the notebook (use environment snow.yml):
 
 	hori_plot-snow.ipynb 
 
@@ -67,8 +67,6 @@ The input data is available:
 
 	https://doi.org/10.5281/zenodo.18495851
 
-
-	![Ensemble Mean Difference Snow Cover Duration](PLOTS/ensemble_mean_diff_snowcoverduration_all_oT_YLGrBl.png)
  
 c.) SCATTER (Nov-April)
 
