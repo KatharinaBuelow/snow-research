@@ -36,8 +36,8 @@ font = {
 
 matplotlib.rc('font', **font)
 
-def savefig(plot, name):
-    plot.savefig(name, dpi=300)
+def savefig(plot, name, dpi=300, **kwargs):
+    plot.savefig(name, dpi=dpi, **kwargs)
 
 def remap(RCM, datadir, tmpdir, infile, griddir, grid):
 
@@ -270,19 +270,26 @@ def plot_3(
     pole = (rotated_lat_lon.grid_north_pole_longitude, rotated_lat_lon.grid_north_pole_latitude)
     projection = ccrs.RotatedPole(*pole)
     
+    title_fs = 18
+    axis_label_fs = 26  # gridline lon/lat labels
+    cbar_label_fs = 26
+    cbar_tick_fs = 26
+
     fig, (ax1, ax2, ax3) = plt.subplots(
         ncols=3, nrows=1, subplot_kw={"projection": projection}, figsize=(20, 8),
     )
     axes = (ax1, ax2, ax3)
     pos = 0.03
     for ax in axes:
-        ax.gridlines(
-            draw_labels={"bottom": "x", "left": "y"}, 
+        gl = ax.gridlines(
+            draw_labels={"bottom": "x", "left": "y", "top": False, "right": False},
             dms=True,
             x_inline=False, 
             y_inline=False,
             linewidth=0.5,
         )
+        gl.xlabel_style = {"size": axis_label_fs}
+        gl.ylabel_style = {"size": axis_label_fs}
         ax.coastlines(resolution="50m", color="black", linewidth=1)
         ax.add_feature(cf.BORDERS)
         ax.set_extent([-22,10,-16,21])
@@ -324,10 +331,12 @@ def plot_3(
         elif mode == "diff": 
             s = "Mean change of {} \n Annual ({}), {}".format(longvar, exp, ts)
         
-        ax.set_title(s+": ", fontdict={"fontsize": 15})
+        ax.set_title(s+": ", fontdict={"fontsize": title_fs})
     if add_cbar is True:
         cbar_ax = fig.add_axes([0.13, pos, 0.7, 0.03])
-        fig.colorbar(im, cax=cbar_ax, orientation="horizontal", label=unit)
+        cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
+        cbar.set_label(unit, fontsize=cbar_label_fs)
+        cbar.ax.tick_params(labelsize=cbar_tick_fs)
     #savefig(plt, "{}/ensemble_mean_{}_{}_{}_YlGrBl.png".format(output_path, mode,var,ts))    
     savefig(plt, "{}/ensemble_mean_{}_{}_{}.png".format(output_path, mode, var, ts))
     print("Plot saved: {}/ensemble_mean_{}_{}_{}.png".format(output_path, mode, var, ts))  
@@ -340,11 +349,10 @@ def plot_9(
     mode="absolut",
     colors="",
     levels="",
-    robustness=False,
     add_cbar=True,
-    hatchcolor="#43464B",
     output_path="",
     extend="max",
+    **kwargs,
     ):
     
     cordex_grid = cordex.cordex_domain("EUR-11", add_vertices=True)
@@ -354,15 +362,17 @@ def plot_9(
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = plt.subplots(
         ncols=3, nrows=3, subplot_kw={"projection": projection}, figsize=(20,20),
     )
-    title_fs = 20
-    label_fs = 18
-    cbar_label_fs = 20
-    cbar_tick_fs = 18
-    # Reduce whitespace between panels
-    fig.subplots_adjust(left=0.02, right=0.99, top=0.95, bottom=0.08, wspace=-0.46, hspace=0.04)
+    title_fs = 24
+    label_fs = 24
+    cbar_label_fs = 24
+    cbar_tick_fs = 24
+    # Reduce whitespace between panels (keep enough bottom margin for the colorbar label)
+    fig.subplots_adjust(left=0.02, right=0.99, top=0.95, bottom=0.12, wspace=-0.46, hspace=0.04)
     axes = (ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8, ax9)
     axes_grid = np.asarray(axes).reshape(3, 3)
-    pos = 0.025
+    pos = 0.06
+    cbar_y_offset = -0.01  # shift colorbar a tiny bit lower
+    row_label_x_offset = -0.065  # shift row labels a tiny bit further left
     for idx, ax in enumerate(axes):
         # Only show x labels in the bottom row
         show_x = idx >= 6
@@ -423,22 +433,6 @@ def plot_9(
                 add_colorbar=False,
             )
 
-            if not robustness is None:
-                rob_sel = regridder(robustness)
-                plt.rcParams.update({"hatch.color": hatchcolor})
-                rob_sel = rob_sel.squeeze()
-                rob = rob_sel.sel({col: c})
-                significant = xr.where(rob != 0, 1, 0).squeeze()
-                significant.plot.contourf(
-                    ax=ax,
-                    levels=[-.5, .5],
-                    colors="none",
-                    hatches=[None, None, "//", "//"],
-                    add_colorbar=False,
-                    extend="both",
-                    transform=projection,
-                )
-
             # Titles: only the first row gets RCP titles
             if r == 0:
                 ax.set_title(exp, fontdict={"fontsize": title_fs})
@@ -453,12 +447,21 @@ def plot_9(
         bbox = ax0.get_position()
         y_center = (bbox.y0 + bbox.y1) / 2
         # Keep label close to the first-column panels even if margins/wspace change
-        x_pos = max(0.0, bbox.x0 - 0.05)
-        fig.text(x_pos, y_center, ts, rotation=90, va="center", ha="center", fontsize=title_fs)
+        x_pos = bbox.x0 + row_label_x_offset
+        fig.text(
+            x_pos,
+            y_center,
+            ts,
+            rotation=90,
+            va="center",
+            ha="center",
+            fontsize=title_fs,
+            clip_on=False,
+        )
     #fig.suptitle("Ensemble mean snow cover duration (September to August)", y=0.92,fontsize=25)
     if add_cbar is True and im is not None:
         #cbar.set_label("Values - how2matplotlib.com", fontsize=16)
-        cbar_ax = fig.add_axes([0.14, pos, 0.74, 0.02])
+        cbar_ax = fig.add_axes([0.14, pos + cbar_y_offset, 0.74, 0.02])
         cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
         if var == 'sd':
             cbar.set_label("[ days / year ]", fontsize=cbar_label_fs)
@@ -467,7 +470,12 @@ def plot_9(
 
         cbar.ax.tick_params(labelsize=cbar_tick_fs)
     
-    savefig(plt, "{}/ensemble_mean_{}_all_oTT.png".format(output_path,var))
+    savefig(
+        plt,
+        "{}/ensemble_mean_{}_all_oTT.png".format(output_path, var),
+        bbox_inches="tight",
+        pad_inches=0.1,
+    )
     print("Plot saved: {}/ensemble_mean_{}_all_oTT.png".format(output_path, var))
     return plt  
 
@@ -492,10 +500,10 @@ def plot_6(
     fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(
         ncols=3, nrows=2, subplot_kw={"projection": projection}, figsize=(19, 13),
     )
-    title_fs = 20
-    label_fs = 18
-    cbar_label_fs = 18
-    cbar_tick_fs = 16
+    title_fs = 24
+    axis_label_fs = 24  # gridline lon/lat labels
+    cbar_label_fs = 24
+    cbar_tick_fs = 24
 
     # Tight layout (column gaps are usually the biggest issue with Cartopy)
     fig.subplots_adjust(left=0.02, right=0.99, top=0.93, bottom=0.12, wspace=-0.46, hspace=0.06)
@@ -503,6 +511,8 @@ def plot_6(
     axes = (ax1, ax2, ax3, ax4, ax5, ax6)
     axes_grid = np.asarray(axes).reshape(2, 3)
     pos = 0.06
+    cbar_y_offset = -0.01  # shift colorbar a tiny bit lower
+    row_label_x_offset = -0.065  # shift row labels a tiny bit further left
 
     for idx, ax in enumerate(axes):
         # Only show x labels in the bottom row
@@ -521,8 +531,8 @@ def plot_6(
             y_inline=False,
             linewidth=0.5,
         )
-        gl.xlabel_style = {"size": label_fs}
-        gl.ylabel_style = {"size": label_fs}
+        gl.xlabel_style = {"size": axis_label_fs}
+        gl.ylabel_style = {"size": axis_label_fs}
         ax.coastlines(resolution="50m", color="black", linewidth=1)
         ax.add_feature(cf.BORDERS)
         ax.set_extent([-22, 10, -16, 21])
@@ -596,12 +606,21 @@ def plot_6(
             continue
         bbox = ax0.get_position()
         y_center = (bbox.y0 + bbox.y1) / 2
-        x_pos = max(0.0, bbox.x0 - 0.05)
-        fig.text(x_pos, y_center, ts, rotation=90, va="center", ha="center", fontsize=title_fs)
+        x_pos = bbox.x0 + row_label_x_offset
+        fig.text(
+            x_pos,
+            y_center,
+            ts,
+            rotation=90,
+            va="center",
+            ha="center",
+            fontsize=title_fs,
+            clip_on=False,
+        )
 
     #fig.suptitle("Ensemble mean snow cover duration (November - April)", y=0.92,fontsize=25)
     if add_cbar is True and im is not None:
-        cbar_ax = fig.add_axes([0.14, pos, 0.74, 0.03])
+        cbar_ax = fig.add_axes([0.14, pos + cbar_y_offset, 0.74, 0.03])
         cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
         # Keep existing default label but set font sizes
         if var == 'sd_ensemble_diff':
@@ -610,5 +629,10 @@ def plot_6(
             cbar.set_label("[ mm ]", fontsize=cbar_label_fs)
         cbar.ax.tick_params(labelsize=cbar_tick_fs)
     
-    savefig(plt, "{}/ensemble_mean_diff_{}_all_oT_YlGrBl.png".format(output_path, var))
+    savefig(
+        plt,
+        "{}/ensemble_mean_diff_{}_all_oT_YlGrBl.png".format(output_path, var),
+        bbox_inches="tight",
+        pad_inches=0.1,
+    )
     return plt  
