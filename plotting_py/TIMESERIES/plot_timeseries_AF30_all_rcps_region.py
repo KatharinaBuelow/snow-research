@@ -1,7 +1,5 @@
 #! /usr/bin/python
 # coding: utf-8
-from __future__ import annotations
-
 import sys
 from pathlib import Path
 
@@ -35,6 +33,11 @@ Input  ../data/*.csv
 def create_plot(df,var):
     ''' make line plot '''
 
+    title_fs = 16
+    axis_label_fs = 16
+    tick_label_fs = 16
+    legend_label_fs = 16
+
     colrcp= {'rcp45':cm.lajolla(0.7),
              'rcp85':cm.lajolla(0.3),
              'rcp26':cm.roma(0.8)}
@@ -52,31 +55,78 @@ def create_plot(df,var):
     # errorbar =('pi',50) e.g., to show the inter-quartile range
     # errorbar =('pi',100) show all; same like: (lambda x: (x.min(), x.max()))
     
-    g=sns.relplot(
-        x='year',
+    # seaborn compatibility:
+    # - seaborn>=0.12 supports `errorbar=("pi", 50)` percentiles
+    # - seaborn<=0.11 does NOT accept `errorbar=` for relplot/lineplot
+    #   (it leaks into matplotlib and fails), so we fall back to `ci=50`.
+    def _sns_version_tuple(v):
+        parts = str(v).split(".")
+        out = []
+        for p in parts[:3]:
+            try:
+                out.append(int(p))
+            except ValueError:
+                break
+        return tuple(out)
+
+    supports_errorbar = _sns_version_tuple(sns.__version__) >= (0, 12)
+
+    relplot_kwargs = dict(
+        x="year",
         y=var,
         data=df,
-        hue='exp',
-        hue_order=['rcp26','rcp45','rcp85'],
+        hue="exp",
+        hue_order=["rcp26", "rcp45", "rcp85"],
         palette=colrcp,
-        kind='line',
-        row='region',
-        row_order=['Alps', 'Eastern E.', 'Iberian P.', 'Scandinavia' ], 
-        #errorbar=(lambda x: (x.min(), x.max())),
-        err_style="band", 
-        errorbar=('pi',50),
-        #ci='sd',
-        estimator="median", 
-        #estimator='mean',
+        kind="line",
+        row="region",
+        row_order=["Alps", "Eastern E.", "Iberian P.", "Scandinavia"],
+        err_style="band",
+        estimator=np.median,
         height=2,
         aspect=6,
-        facet_kws={'sharey': False, 'sharex': True},
+        facet_kws={"sharey": False, "sharex": True},
     )
 
-    g.set_axis_labels(xname, yname)
-    g.set_titles(row_template='{row_name}') #, col_template='{col_name}')
+    if supports_errorbar:
+        g = sns.relplot(
+            **relplot_kwargs,
+            errorbar=("pi", 90),
+        )
+    else:
+        g = sns.relplot(
+            **relplot_kwargs,
+            ci=90,
+        )
+
+    # Axis labels: by default (1 column) seaborn puts a y label on every row,
+    # which can overlap when the facets are tightly stacked. Use a single y label.
+    for ax in g.axes.flat:
+        ax.set_xlabel("")
+        ax.set_ylabel("")
+
+    mid_row = int(g.axes.shape[0] // 2)
+    g.axes[mid_row, 0].set_ylabel(yname, fontsize=axis_label_fs, labelpad=15)
+
+    # Push x label lower on the bottom panel
+    g.axes[-1, 0].set_xlabel(xname, fontsize=axis_label_fs, labelpad=35)
+    g.set_titles(row_template='{row_name}', size=title_fs) #, col_template='{col_name}')
     g.set(xlim=(xmin, xmax))
     g.set(xticks=range (xmin,xmax,10))
+
+    # Tick label sizes on all facets
+    for ax in g.axes.flat:
+        ax.tick_params(axis="both", which="both", labelsize=tick_label_fs)
+
+    # Keep original autoscaling, but force y-axis to start at 0.
+    # If the panel range includes these values, use nice % ticks.
+    for ax in g.axes.flat:
+        ax.set_ylim(bottom=0)
+        ymax_current = ax.get_ylim()[1]
+        candidate_ticks = [0, 25, 50, 75, 100]
+        ticks_in_range = [t for t in candidate_ticks if t <= ymax_current + 1e-9]
+        if 25 in ticks_in_range:
+            ax.set_yticks(ticks_in_range)
 
 
     # labely on right side of y-axis
@@ -84,11 +134,22 @@ def create_plot(df,var):
         ax1 = ax.twinx()
         ax1.set_yticks(ax.get_yticks())
         ax1.set_ylim(ax.get_ylim())
+        ax1.tick_params(axis="y", which="both", labelsize=tick_label_fs)
 
     # Legend at the bottom
-    sns.move_legend(g, "lower center" , bbox_to_anchor=(.5, -0.03), ncol=3, title=None, frameon=False,)
+    sns.move_legend(
+        g,
+        "lower center",
+        bbox_to_anchor=(0.5, -0.03),
+        ncol=3,
+        title=None,
+        frameon=False,
+    )
+    if g.legend is not None:
+        for text in g.legend.texts:
+            text.set_fontsize(legend_label_fs)
     
-    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_median_pi_50.png')
+    plotname= os.path.join(plotdir, var+'_timeseries_all_rcps_median_pi_90.png')
     plt.savefig(plotname, bbox_inches="tight")
     print("Plot saved: ", plotname)
 
