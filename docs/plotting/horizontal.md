@@ -16,6 +16,8 @@ All scripts are located in `plotting_py/HORIZONTAL/`.
 
 ## How to Run
 
+Use the environment snow.yml
+
 Use the Jupyter notebook:
 
 ```
@@ -35,11 +37,3 @@ plotting_py/HORIZONTAL/plotting_tools_snow.py
 Input data is available on Zenodo:
 
 [https://doi.org/10.5281/zenodo.18495851](https://doi.org/10.5281/zenodo.18495851)
-
----
-
-## Example Output
-
-![Ensemble Mean Difference Snow Cover Duration](../../PLOTS/ensemble_mean_diff_snowcoverduration_all_oT_YLGrBl.png)
-
-*Ensemble mean difference in snow cover duration (all scenarios, robust signal shown)*

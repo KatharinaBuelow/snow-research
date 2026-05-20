@@ -33,12 +33,6 @@ Pre-processed CSV files for plotting are located in the `data/` directory:
 | File | Description |
 |------|-------------|
 | `AF30-year_timeseries_all_level_owd.csv` | Annual AF30 timeseries per level |
-| `snowcover-year_timeseries_all_level_owd.csv` | Annual snow cover timeseries |
-| `snowday-year_timeseries_all_level_owd.csv` | Annual snow day timeseries |
-| `DIFF-sca-year_timeseries_all_level_owd.csv` | SCA change timeseries |
-| `DIFF-sd-year_timeseries_all_level_owd.csv` | Snow day change timeseries |
-| `DIFF-snw-year_timeseries_all_level_owd.csv` | SWE change timeseries |
-| `DIFF-pr-year_timeseries_all_level_owd.csv` | Precipitation change timeseries |
-| `DIFF-tas-year_timeseries_all_level_owd.csv` | Temperature change timeseries |
-| `snw_tas_pr_snowday-snowcover_NA_timeslice_areamean_all_level_owd_m2.csv` | Timeslice November-Aprilarea means |
+| `snw-year_timeseries_all_level_owd.csv` | Annual snow water equivalent timeseries |
+| `snw_tas_pr_snowday-snowcover_NA_timeslice_areamean_all_level_owd_m2.csv` | Timeslice November-April area means |
 | `snw_tas_pr_snowday-snowcover_timeslice_annualcyle_all_level_owd_norm2.csv` | Annual cycle per timeslice |
