@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # coding: utf-8
 
-from __future__ import annotations
+#from __future__ import annotations
 
 import sys
 from pathlib import Path
@@ -54,7 +54,7 @@ df=design_df(dfo)
 
 # plotdir=datadir.replace('data','plots/SCATTER/change/')
 # better put in work
-plotdir=workdir+'/plots/change/'
+plotdir=workdir+'/plots/change-t/'
 if not os.path.exists(plotdir):
     os.makedirs(plotdir)
 
@@ -65,10 +65,10 @@ print('Output will be stored in : ', plotdir)
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Select what you like to plot here:
 #
-var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Eq.', 'snw', '%', 'pro_diff', (-100,10)],}
+#var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Water Eq.', 'snw', '%', 'pro_diff', (-100,10)],}
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,5)],}
 #var_meta_dict = {'pr':[r'$\Delta$' +' Precipitation ', 'pr', '%', 'pro_diff', (-50,50)],}
-#var_meta_dict = {'snw':[r'$\Delta$' +' Snow cover ', 'sca', '%', 'diff', (-60,2)],}
+var2_meta_dict = {'snw':[r'$\Delta$' +' Snow cover ', 'sca', '%', 'diff', (-60,2)],}
 
 #var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', 'Number', 'diff', (-35,0)],}
 #var2_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,10)],}
