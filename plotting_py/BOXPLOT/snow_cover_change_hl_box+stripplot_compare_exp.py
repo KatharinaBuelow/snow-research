@@ -8,7 +8,7 @@ import os
 from matplotlib import markers
 import pandas as pd
 import seaborn as sns
-from snow_plotting_tools import boxplot_all_exp_region
+from snow_plotting_tools import boxplot_all_exp_region, boxplot_all_exp_regions_timeslices_grid
 
 '''
 Contact: Katharina Buelow
@@ -17,16 +17,16 @@ Input  ../data/
 
 '''
 # prepare boxplot for snow cover [%]
-#var='sca'
+var='sca'
 # prepare boxplot for snowcoverduration [day]
 # Nov-April Numer per month
 #var='snowday'
 # prepare boxplot with swe [?]
-var='sca'
+#var='snw'
 
 # prepare boxplot for each region
-reg = ['AL', 'EU', 'EA', 'IP', 'SC']
-title = ['Alps', 'Europe', 'Eastern Europe', 'Iberian Peninsula', 'Scandinavia']
+reg = ['AL', 'EA', 'IP', 'SC']
+title = ['Alps', 'Eastern Europe', 'Iberian Peninsula', 'Scandinavia']
 
 #------------------------------
 # directory an In and outfile:
@@ -133,4 +133,18 @@ for t in time:
         sel1r.reset_index(drop=True)
         plottitle='November-April '+t+' '+title[r]
         boxplot_all_exp_region(sel1r, plotdir, plottitle, reg[r],t, var)
+
+
+# 2. One combined plot: rows=regions, columns=time slices
+fig_title = f'November-April – {var} – experiments by region/time'
+boxplot_all_exp_regions_timeslices_grid(
+    df_neu=df_neu,
+    df_hist_rcp85=selb,
+    plotdir=plotdir,
+    title=fig_title,
+    regions=reg,
+    region_titles=title,
+    times=time,
+    var=var,
+)
 
