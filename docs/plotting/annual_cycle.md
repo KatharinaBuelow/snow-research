@@ -36,9 +36,3 @@ python plot_annual_cycle_all.py
 python plot_annual_cycle_all_rcps_region.py
 ```
 
----
-
-## Notes
-
-**What does % of SCA mean?**  
-Monthly SCA values are adjusted to months with a length of **30 days** to ensure comparability.

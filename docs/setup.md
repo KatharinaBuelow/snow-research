@@ -16,6 +16,8 @@ To build static HTML:
 mkdocs build
 ```
 
+Use the environment mkdocs.yml
+
 ---
 
 ## Python Environments
@@ -29,7 +31,14 @@ Most scripts work with the latest Python version. Install the main dependencies:
 ```bash
 pip install numpy pandas matplotlib cmcrameri
 ```
+### Horizontal Plots
 
+Use snow.yml
+
+### Timeseries Plots
+
+Use snow310.yml
+ 
 ### Box plots (Python 3.10 required)
 
 As of **March 2026**, `seaborn` is better installed in a **Python 3.10** environment due to unresolved dependency conflicts with newer versions:

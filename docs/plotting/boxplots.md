@@ -10,14 +10,6 @@ All scripts are located in `plotting_py/BOXPLOT/`.
 
 Box plots use the **same input data file as the Scatter plots** (see `data/`).
 
----
-
-## Environment Note
-
-> :warning: **Seaborn** (used for plotting) is best installed in a **Python 3.10** environment.  
-> As of March 2026, some dependencies do not resolve correctly with newer Python versions.
-
----
 
 ## Scripts Overview
 
@@ -50,11 +42,3 @@ snow_plotting_tools.py
 Contains shared plotting functions used by both scripts above.
 
 ---
-
-## Example Notebook
-
-An interactive example is available as a Jupyter notebook:
-
-```
-plotting_py/BOXPLOT/snowcover_change_hl_compare_exp_box+stripplot.ipynb
-```

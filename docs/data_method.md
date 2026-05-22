@@ -11,7 +11,54 @@ All datasets are publicly accessible via the **Copernicus Climate Data Store (CD
 
 - https://cds.climate.copernicus.eu/datasets/projections-cordex-domains-single-levels?tab=download
 
-### Model selection and exclusions
+### Selected Models
+
+**Legend for scenario abbreviations:**
+
+| Symbol | Scenario | Color      |
+|--------|----------|------------|
+| 🔵     | RCP2.6   | Blue      |
+| 🟡     | RCP4.5   | Yellow       |
+| 🔴     | RCP8.5   | Red        |
+| 🔵 🔴  | RCP2.6 & RCP8.5 | Blue & Red |
+| 🟡 🔴  | RCP4.5 & RCP8.5 | Yellow & Red  |
+| 🔵 🟡 🔴 | RCP2.6, RCP4.5 & RCP8.5 | Blue & Yellow & Red |
+*Scenarios are indicated by colored circles: 🔵 (RCP2.6), 🟡 (RCP4.5), 🔴 (RCP8.5), combinations as shown.*
+
+| RCM / GCM                    | CanESM2 (r1) | CNRM-CM5 (r1) | EC-EARTH (r1) | EC-EARTH (r3) | EC-EARTH (r12) | GFDL-ESM2G (r1) | HadGEM2-ES (r1) |
+|------------------------------|--------------|---------------|---------------|---------------|----------------|-----------------|-----------------|
+| CLMcom-CCLM4-8-17            | 🔴           |               |               |               | 🔵 🟡 🔴        |                 | 🟡  🔴           |
+| CLMcom-ETH-COSMO-crCLIM-v1-1 |              | 🔴            | 🔴            | 🔴            | 🔴             |                 | 🔴              |
+| CNRM-ALADIN63                |              | 🔵 🟡 🔴       |               |               |                |                 | 🔴              |
+| DMI-HIRHAM5                  |              | 🔴            | 🔴            | 🔵 🟡 🔴       | 🔴             |                 | 🔵 🟡 🔴         |
+| GERICS-REMO2015              | 🔴           | 🔵 🔴          |               |               | 🔵 🟡 🔴        | 🔵              | 🔵 🟡 🔴         |
+| MPI-CSC-REMO2009             |              |               |               |               |                |                 |                 |
+| ICTP-RegCM4-6                |              | 🔴            |               |               | 🔴             |                 | 🔵 🔴           |
+| IPSL-WRF381P                 |              | 🔴            |               |               | 🔴             |                 | 🔴              |
+| KNMI-RACMO22E                |              | 🔵 🟡 🔴       | 🟡 🔴          | 🔴            | 🔵 🟡 🔴        |                 | 🔵 🟡 🔴         |
+| MOHC-HadREM3-GA7-05          |              | 🔴            |               |               | 🔵 🔴           |                 | 🔵 🔴           |
+| SMHI-RCA4                    |              |               | 🔴            | 🔴            | 🔵 🟡 🔴        |                 | 🔵 🟡 🔴         |
+| SMHI-RCA4                    |                   | 🟡 🔴            |              | 🔵 🟡 🔴       | 🔴             | 🔴             | 🔵 🟡 🔴      |
+<!-- The original table was too wide for some markdown renderers. It has been split into two tables for better readability. -->
+
+| RCM / GCM                    | IPSL-CM5A-LR (r1) | IPSL-CM5A-MR (r1) | MIROC5 (r1) | MPI-ESM-LR (r1) | MPI-ESM-LR (r2) | MPI-ESM-LR (r3) | NorESM1-M (r1) |
+| ---------------------------- | ----------------- | ----------------- | ----------- | --------------- | --------------- | --------------- | -------------- |
+| CLMcom-CCLM4-8-17            |                   |                   | 🔵 🔴        | 🔵 🟡 🔴        |                 |                 |                |
+| CLMcom-ETH-COSMO-crCLIM-v1-1 |                   |                   |             | 🔴             | 🔴             | 🔴             | 🔴            |
+| CNRM-ALADIN63                |                   |                   |             | 🔴             |                 |                 | 🔴            |
+| DMI-HIRHAM5                  |                   | 🔴               |             | 🔴             |                 |                 | 🟡 🔴         |
+| GERICS-REMO2015              | 🔵               | 🔴               | 🔵 🔴        |                 |                 | 🔴             | 🔵 🟡 🔴      |
+| MPI-CSC-REMO2009             |                   |                   |             | 🔵 🟡 🔴        | 🔵 🟡 🔴        |                 |                |
+| ICTP-RegCM4-6                |                   |                   |             | 🔵 🔴          |                 |                 | 🔵 🔴         |
+| IPSL-WRF381P                 |                   | 🟡 🔴            |             | 🔴             |                 |                 | 🔴            |
+| KNMI-RACMO22E                |                   | 🔴               |             | 🔵 🔴          |                 |                 | 🔵 🔴         |
+| MOHC-HadREM3-GA7-05          |                   |                   |             | 🔴             |                 |                 | 🔴            |
+| SMHI-RCA4                    |                   | 🟡 🔴            |             | 🔵 🟡 🔴        | 🔴             | 🔴             | 🔵 🟡 🔴      |
+<!-- The original table was too wide for some markdown renderers. It has been split into two tables for better readability. -->
+
+
+
+### Excluded models
 
 Several simulations were excluded to ensure a homogeneous ensemble:
 
