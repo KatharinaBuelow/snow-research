@@ -62,9 +62,9 @@ print('Output will be stored in : ', plotdir)
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Select what you like to plot here:
 #
-var2_meta_dict = {'snw':['Snow Water E.', 'snw', 'mm', 'abs', (0,1000)],}
+#var2_meta_dict = {'snw':['Snow Water E.', 'snw', 'mm', 'abs', (0,1000)],}
 #var_meta_dict = {'snw':[r'$\Delta$' +' Snow Day ', 'snowday', '%', 'pro_diff', (-100,10)],}
-#var_meta_dict = {'snw':[' Snow cover ', 'sca', '%', 'abs', (0,110)],}
+var2_meta_dict = {'snw':[' Snow cover ', 'sca', '%', 'abs', (0,110)],}
 var_meta_dict = {'temp':[' Temperature', 'tas', '°C', 'abs', (-15, 10)],}
 #var_meta_dict = {'pr':['Precipitation', 'pr', 'mm/day', 'abs', (0,10)],}
 		       

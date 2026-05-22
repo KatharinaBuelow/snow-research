@@ -1,6 +1,5 @@
 #! /usr/bin/python
 # coding: utf-8
-from __future__ import annotations
 import sys
 from pathlib import Path
 
@@ -11,7 +10,17 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except Exception as exc:
+    raise SystemExit(
+        "Failed to import matplotlib. This is usually caused by a NumPy/Matplotlib binary mismatch "
+        "(e.g. NumPy 2.x with extensions built against NumPy 1.x).\n\n"
+        "Recommended fix: run this script inside the conda env defined in snow310.yml, e.g.:\n"
+        "  conda run -n snow310 python plotting_py/ANNUAL_CYCLE/plot_annual_cycle_all_rcps_all_regions.py\n\n"
+        "Or ensure your active environment uses numpy<2.\n\n"
+        f"Original error: {exc}"
+    )
 import os
 import pandas as pd
 import glob
@@ -21,6 +30,23 @@ from cmcrameri import cm
 from plotting_py.TIMESERIES.colortable import colortable
 from plotting_py.TIMESERIES.design_matrix_tool import design_df_mean
 #from matplotlib.transforms import ScaledTranslation
+
+
+# Font sizes for plots
+AXIS_LABEL_FONTSIZE = 12
+TICK_LABEL_FONTSIZE = 12
+FACET_TITLE_FONTSIZE = 12
+LEGEND_FONTSIZE = 12
+LEGEND_TITLE_FONTSIZE = 12
+LEGEND_BBOX_Y = -0.14
+
+# Percentile band ("prediction interval") settings
+PERCENTILE_INTERVAL = 95  # 95% band => 2.5th to 97.5th percentile
+BAND_ALPHA = 0.20
+
+# Month handling: enforce Sep→Aug order to match the intended water year labels.
+_MONTH_ORDER = ['Sep', 'Oct', 'Okt', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug']
+_MONTH_LABELS_SHORT = ['S', 'O', 'N', 'D', 'J', 'F', 'M', 'A', 'M', 'J', 'J', 'A']
 
 
 '''
@@ -48,27 +74,139 @@ def create_plot(df, var, xname, yname, ymin, ymax, plotdir):
     
     #plt.figure()
     
-    g=sns.relplot(x='month',
-                  y=var,
-                  data=df,
-                  err_style="band", 
-                  errorbar=('pi',95),
-                  estimator='median',
-                  hue='rcp_timeslice',
-                  hue_order=['rcp26_1971-2000','rcp26_2021-2050','rcp26_2069-2098',
-                             'rcp45_1971-2000','rcp45_2021-2050','rcp45_2069-2098',
-                             'rcp85_1971-2000','rcp85_2021-2050','rcp85_2069-2098'],
-                  palette=colors,
-                  kind='line',
-                  col='exp',
-                  col_order=['rcp26','rcp45','rcp85'], 
-                  row='region',
-                  row_order=['Alps','Eastern E.','Iberian P.','Scandinavia'],
-                  height=2, aspect=1.5,
-                  facet_kws={'sharey': False, 'sharex': True})
-    g.set_xticklabels(['S','O','N','D','J','F','M','A','M','J','J','A'])
-    g.set_axis_labels(xname, yname)
-    g.set_titles(row_template='{row_name}', col_template='{col_name}')
+    # seaborn<0.12 does not support the `errorbar=` API.
+    def _seaborn_supports_errorbar() -> bool:
+        try:
+            major, minor = (int(x) for x in sns.__version__.split('.')[:2])
+        except Exception:
+            return False
+        return (major, minor) >= (0, 12)
+
+    # Normalize month to a numeric index (Sep=0 ... Aug=11). This keeps the
+    # x-axis order stable and makes manual fill_between work reliably.
+    df = df.copy()
+    if 'month' not in df.columns:
+        raise ValueError("Expected column 'month' in input dataframe")
+
+    if pd.api.types.is_numeric_dtype(df['month']):
+        # Assume 1..12, map Sep(9)->0 ... Aug(8)->11
+        df['month_idx'] = (df['month'].astype(int) - 9) % 12
+    else:
+        month_map = {
+            'Sep': 0,
+            'Oct': 1,
+            'Okt': 1,
+            'Nov': 2,
+            'Dec': 3,
+            'Jan': 4,
+            'Feb': 5,
+            'Mar': 6,
+            'Apr': 7,
+            'May': 8,
+            'Jun': 9,
+            'Jul': 10,
+            'Aug': 11,
+        }
+        df['month_idx'] = df['month'].map(month_map)
+        if df['month_idx'].isna().any():
+            unknown = sorted(set(df.loc[df['month_idx'].isna(), 'month'].astype(str)))
+            raise ValueError(f"Unknown month labels in 'month' column: {unknown}")
+
+    relplot_kwargs = dict(
+        x='month_idx',
+        y=var,
+        data=df,
+        err_style="band",
+        estimator=np.median,
+        hue='rcp_timeslice',
+        hue_order=[
+            'rcp26_1971-2000', 'rcp26_2021-2050', 'rcp26_2069-2098',
+            'rcp45_1971-2000', 'rcp45_2021-2050', 'rcp45_2069-2098',
+            'rcp85_1971-2000', 'rcp85_2021-2050', 'rcp85_2069-2098',
+        ],
+        palette=colors,
+        kind='line',
+        col='exp',
+        col_order=['rcp26', 'rcp45', 'rcp85'],
+        row='region',
+        row_order=['Alps', 'Eastern E.', 'Iberian P.', 'Scandinavia'],
+        height=2,
+        aspect=1.5,
+        facet_kws={'sharey': False, 'sharex': True},
+    )
+
+    # Use seaborn's percentile interval when available; otherwise add a manual
+    # percentile band (older seaborn only supports CI, which is not what we want).
+    supports_errorbar = _seaborn_supports_errorbar()
+    if supports_errorbar:
+        relplot_kwargs['errorbar'] = ('pi', PERCENTILE_INTERVAL)
+    else:
+        relplot_kwargs['ci'] = None
+
+    g = sns.relplot(**relplot_kwargs)
+
+    if not supports_errorbar:
+        # Manual PI bands for older seaborn
+        regions = relplot_kwargs['row_order']
+        exps = relplot_kwargs['col_order']
+        hue_levels = relplot_kwargs['hue_order']
+        q_low = (100 - PERCENTILE_INTERVAL) / 2.0
+        q_high = 100 - q_low
+        month_positions = np.arange(12)
+
+        axes = np.asarray(g.axes)
+        if axes.ndim == 1:
+            axes = axes.reshape(-1, 1)
+        for row_idx, region in enumerate(regions):
+            for col_idx, exp in enumerate(exps):
+                ax = axes[row_idx, col_idx]
+                sub = df.loc[(df['region'] == region) & (df['exp'] == exp)]
+                if sub.empty:
+                    continue
+
+                for hue_level in hue_levels:
+                    sub_h = sub.loc[sub['rcp_timeslice'] == hue_level]
+                    if sub_h.empty:
+                        continue
+
+                    lows = []
+                    highs = []
+                    for m in month_positions:
+                        vals = sub_h.loc[sub_h['month_idx'] == m, var].to_numpy()
+                        vals = vals[np.isfinite(vals)]
+                        if vals.size == 0:
+                            lows.append(np.nan)
+                            highs.append(np.nan)
+                        else:
+                            lows.append(np.nanpercentile(vals, q_low))
+                            highs.append(np.nanpercentile(vals, q_high))
+
+                    color = colors.get(hue_level, None)
+                    ax.fill_between(month_positions, lows, highs, color=color, alpha=BAND_ALPHA, linewidth=0)
+
+    # X-axis month labels (Sep→Aug)
+    for ax in g.axes.flatten():
+        ax.set_xticks(np.arange(12))
+        ax.set_xticklabels(_MONTH_LABELS_SHORT, fontsize=TICK_LABEL_FONTSIZE)
+        ax.set_xlim(-0.5, 11.5)
+    # Only one y-label for the whole figure (saves space)
+    g.set_axis_labels(xname, "", fontsize=AXIS_LABEL_FONTSIZE)
+    g.set_titles(row_template='{row_name}', col_template='{col_name}', size=FACET_TITLE_FONTSIZE)
+
+    # Remove any leftover per-axes y-labels and add a single figure-level one.
+    for ax in g.axes.flatten():
+        ax.set_ylabel("")
+    ylabel_text = g.fig.text(
+        0.02,
+        0.5,
+        yname,
+        va='center',
+        rotation='vertical',
+        fontsize=AXIS_LABEL_FONTSIZE,
+    )
+
+    for ax in g.axes.flatten():
+        ax.tick_params(axis='both', which='major', labelsize=TICK_LABEL_FONTSIZE)
 
     # Align y-labels after seaborn has positioned everything.
     #g.fig.canvas.draw()
@@ -108,10 +246,27 @@ def create_plot(df, var, xname, yname, ymin, ymax, plotdir):
             ax.set_ylim(ymin, region_ymax)
     #g.set(ylim=(ymin, ymax))
 
-    sns.move_legend(g,'lower center', scatterpoints = 1, bbox_to_anchor=(0.45, -0.1),fancybox=True, shadow=True, ncol=3 )
+    sns.move_legend(
+        g,
+        'lower center',
+        scatterpoints=1,
+        bbox_to_anchor=(0.45, LEGEND_BBOX_Y),
+        fancybox=True,
+        shadow=True,
+        ncol=3,
+    )
+    if g.legend is not None:
+        for text in g.legend.get_texts():
+            text.set_fontsize(LEGEND_FONTSIZE)
+        if g.legend.get_title() is not None:
+            g.legend.get_title().set_fontsize(LEGEND_TITLE_FONTSIZE)
 
     plotname = os.path.join(plotdir, f"all_regions_{var}_median_annualcycle_all_rcps.png")
-    plt.savefig(plotname, bbox_inches="tight")
+    print(f"Saving plot to {plotname}")
+    extra_artists = [ylabel_text]
+    if g.legend is not None:
+        extra_artists.append(g.legend)
+    plt.savefig(plotname, bbox_inches="tight", bbox_extra_artists=extra_artists)
 
     return
 
