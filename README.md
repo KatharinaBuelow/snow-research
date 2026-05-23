@@ -1,7 +1,4 @@
 # Repository for snow-research
-	
-	https://katharinabuelow.github.io/snow-research/
-
 
 :snowman: The snow research is a cooperation with:
 
@@ -17,6 +14,9 @@ This git repository holds the GERICS contribution.
 
 ## Documentation
 Please consider the documentation for detailed information
+	
+	https://katharinabuelow.github.io/snow-research/
+
 
 ### Serve the documentation locally
 
