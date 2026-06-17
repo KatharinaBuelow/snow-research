@@ -2,9 +2,9 @@
 
 :snowman: The snow research is a cooperation with:
 
-Christian Steger (ETH) 
+Christian Steger (Meteo Swiss) 
 
-Sven Kotlarski (Meteo Swiss)
+Sven Kotlarski (ETH)
 
 Claas Teichmann (GERICS)
 
