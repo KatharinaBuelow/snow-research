@@ -1,10 +1,10 @@
 # Repository for snow-research
-# 
+
 :snowman: The snow research is a cooperation with:
 
-Christian Steger (ETH) 
+Christian Steger (Meteo Swiss) 
 
-Sven Kotlarski (Meteo Swiss)
+Sven Kotlarski (ETH)
 
 Claas Teichmann (GERICS)
 
@@ -13,7 +13,10 @@ Katharina Bülow
 This git repository holds the GERICS contribution.
 
 ## Documentation
-Please consider the documentation for detailed information
+Please consider the documentation for detailed information.
+
+Live documentation (GitHub Pages): https://katharinabuelow.github.io/snow-research/
+
 
 ### Serve the documentation locally
 

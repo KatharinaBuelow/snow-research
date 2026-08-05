@@ -28,7 +28,7 @@ A snow day is defined as a day with at least **3 cm of snow**:
 
 | Variable | Threshold |
 |----------|-----------|
-| snw (snow water equivalent) | ≥ 9.36 kg/m² |
+| snw (snow water equivalent) | ≥ 10 mm |
 | snd (snow depth) | ≥ 0.03 m |
 
 ### Snow cover duration for 30 days
