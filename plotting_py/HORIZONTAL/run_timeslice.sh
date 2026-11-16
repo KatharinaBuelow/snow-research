@@ -24,7 +24,6 @@ export OMP_STACKSIZE=128M
 ###################################################                                                                                              
 #                                                                                                                                                
 #                                                                                                                                                
-
-python /home/g/g300047/SCRIPTS/github/snow-research/plotting_py/HORIZONTAL/timeslice_euro_cordex.py
+python /home/g/g300047/SCRIPTS/github/snow-research/plotting_py/HORIZONTAL/timeslice_pro_euro_cordex.py
 
 

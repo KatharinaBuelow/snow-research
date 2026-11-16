@@ -107,7 +107,7 @@ for sim in sims:
         outfilename=filename.split('_')[1]+'_'+filename.split('_')[2]+'_'+filename.split('_')[0]+'_'+filename.split('_')[5]+'_'+filename.split('_')[8]+'_'+filename.split('_')[9]+'_'+filename.split('_')[10]+'_'+filename.split('_')[11]+'.nc'
     print(outfilename)
     # need to adjusted to your path:
-    tmp=filename.split('_')[10]
+    tmp=filename.split('_')[11]
     RCM=tmp.split('-')[0]
     print(RCM)
     if RCM == 'ICTP':

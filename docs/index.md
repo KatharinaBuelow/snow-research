@@ -5,8 +5,8 @@ Welcome to the documentation of the **GERICS Snow Research** project.
 This is a cooperation between:
 
 - **Katharina Bülow** (GERICS)
-- **Christian Steger** (ETH Zürich)
-- **Sven Kotlarski** (MeteoSwiss)
+- **Christian Steger** (MeteoSwiss, ETH Zürich)
+- **Sven Kotlarski** (ETH Zürich)
 - **Claas Teichmann** (GERICS)
 
 This repository contains the GERICS contribution to the project, including index calculation workflows, area mean computations, and a variety of plotting scripts and notebooks.

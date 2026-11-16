@@ -197,7 +197,7 @@ def ensemblemean_exp(outdatadir, var):
         for exp in ['rcp26','rcp45','rcp85']:
             outputfile=os.path.join(outdatadir,'ENS_MEAN_'+timeslice+'_'+exp+'.nc')
             ensemble_mean_files = glob.glob(outdatadir+'MEAN_'+timeslice+'*'+exp+'*.nc')
-           
+            print('ensemble_mean_files =', ensemble_mean_files)
             cdo.ensmean(input=ensemble_mean_files, output=outputfile)
             print('Ensemble mean is calculated:', outputfile)
             if timeslice != "1972_2001":
@@ -323,7 +323,7 @@ def plot_3(
         ts = expts.split("_")[1]
         if var in ['sd', 'sd_ensemble_diff']:
             longvar='snow cover duration'
-        elif var in ['snw', 'snw_ensemble_diff']:
+        elif var in ['snw', 'snw_ensemble_diff', 'snw_ensemble_diff_pro']:
             longvar='snow water equivalent'
         
         if mode == "absolut":
@@ -622,11 +622,14 @@ def plot_6(
     if add_cbar is True and im is not None:
         cbar_ax = fig.add_axes([0.14, pos + cbar_y_offset, 0.74, 0.03])
         cbar = fig.colorbar(im, cax=cbar_ax, orientation="horizontal")
+        cbar.set_ticks(np.unique(np.append(levels, [-5, 5])))
         # Keep existing default label but set font sizes
         if var == 'sd_ensemble_diff':
             cbar.set_label("[ days / year ]", fontsize=cbar_label_fs)
         elif var == 'snw_ensemble_diff':
             cbar.set_label("[ mm ]", fontsize=cbar_label_fs)
+        elif var == 'snw_ensemble_diff_pro':
+            cbar.set_label("[ % ]", fontsize=cbar_label_fs)
         cbar.ax.tick_params(labelsize=cbar_tick_fs)
     
     savefig(
